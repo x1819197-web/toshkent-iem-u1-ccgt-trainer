@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toshkent IEM — Unit 1 CCGT O'quv Treneri (Avtonom)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+body{background:#222;color:#e6e9ee;font-size:13px}
+.hd{background:#111;border-bottom:2px solid #000;display:flex;align-items:stretch;flex-wrap:wrap}
+.hd>div{padding:7px 12px}
+.sys b{font-size:14px}.sys span{font-size:11px;color:#9aa3ad;display:block}
+.almSum{display:flex;gap:6px;align-items:center;flex:1;min-width:300px;background:#0a0a0a;padding:7px 10px}
+.alm{font-size:11px;font-family:Consolas,monospace;padding:3px 8px;border-radius:2px;background:#333}
+.alm.crit{background:#d92626;color:#fff;animation:bl 1s infinite}
+.alm.warn{background:#e8a13d;color:#000}.alm.ok{background:#1e9e50;color:#fff}
+@keyframes bl{50%{opacity:.45}}
+.trn{background:#7a4d00;color:#ffe2a8;font-size:11px;font-weight:800;padding:3px 8px;border:1px solid #ffcf7a;border-radius:3px;white-space:nowrap}
+.clk{font-family:Consolas,monospace;text-align:right}
+.nav{display:flex;background:#2b2f36;width:100%}
+.nav button{flex:1;background:transparent;border:none;color:#cdd5df;padding:10px 4px;font-weight:700;font-size:12px;cursor:pointer;border-right:1px solid #111}
+.nav button.on{background:#e8ecf0;color:#111}
+.pg{display:none;max-width:1320px;margin:0 auto;padding:10px}.pg.on{display:block}
+.pn{background:#2e333b;border:1px solid #111;border-top:3px solid #4a5560;margin-bottom:10px}
+.pn h3{background:#3a414b;color:#fff;font-size:12px;padding:6px 10px;display:flex;justify-content:space-between;align-items:center}
+svg{width:100%;height:auto;background:#2e333b;display:block}
+.t{font-size:10px;fill:#aeb6c0}.v{font-size:12px;font-weight:700;fill:#fff;font-family:Consolas,monospace}
+.pipeG{stroke:#e8c33d;stroke-width:9;fill:none}
+.pipeW{stroke:#4aa8ff;stroke-width:9;fill:none}
+.pipeS{stroke:#e05252;stroke-width:10;fill:none}
+.pipeO{stroke:#c084fc;stroke-width:7;fill:none}
+.dim{opacity:.3}
+.eq{fill:#3d454f;stroke:#7d8894;stroke-width:1.5;cursor:pointer}
+.eq.run{stroke:#2bff88}.eq.trip{stroke:#ff3b3b;animation:bl .7s infinite}
+.vlv{cursor:pointer}.vlv .bd{stroke-width:2}
+.vlv.op .bd{fill:#1e9e50;stroke:#0c5c2b}.vlv.cl .bd{fill:#6b7280;stroke:#333}
+.fpRow{display:grid;grid-template-columns:1fr 300px;gap:10px}
+@media(max-width:1000px){.fpRow{grid-template-columns:1fr}}
+.card{background:#31363f;border:1px solid #111;padding:8px;margin-bottom:8px}
+.card h4{font-size:11px;color:#9aa3ad;text-transform:uppercase;margin-bottom:6px}
+.dg{background:#000;border:2px inset #555;color:#3dff7a;font-family:Consolas,monospace;text-align:center;padding:6px;font-size:16px;font-weight:700}
+.dg small{display:block;font-size:10px;color:#9fe8c1}
+.dg.r{color:#ff6b6e}.dg.a{color:#ffcf7a}
+button.b{background:#484f5a;border:1px solid #777;border-bottom:3px solid #111;color:#fff;padding:8px;font-weight:700;font-size:12px;cursor:pointer}
+button.b:hover{background:#5a6270}
+button.b.g{background:#14532d;border-color:#22c55e}button.b.r{background:#5f1414;border-color:#ef4444}button.b.bl{background:#123a5f;border-color:#3b82f6}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#fp{position:fixed;right:14px;top:120px;width:300px;background:#f2f4f6;color:#111;border:2px solid #000;z-index:50;display:none;box-shadow:0 8px 30px #000}
+#fp h4{background:#0e2a47;color:#fff;padding:8px;font-size:13px;display:flex;justify-content:space-between}
+#fp .bd{padding:10px}
+.row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px dotted #aaa}
+.row b{font-family:Consolas,monospace}
+#fp input{width:100%;padding:7px;margin:6px 0;border:1px solid #666}
+#fp .mbtns{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;margin:6px 0}
+#fp .mbtns button{padding:7px;font-weight:800;border:1px solid #555;cursor:pointer}
+#fp .mbtns button.on{background:#0e2a47;color:#fff}
+.ft{background:#111;border-top:2px solid #000;display:flex;gap:10px;align-items:center;padding:7px 12px;font-size:12px;position:sticky;bottom:0;flex-wrap:wrap}
+.okdot{color:#2bff88}.health{font-family:Consolas,monospace;font-size:11px;color:#9aa3ad}
+table.al{width:100%;border-collapse:collapse;background:#fff;color:#111;font-size:12px}
+table.al th{background:#222;color:#fff;padding:5px;text-align:left}
+table.al td{padding:5px;border-bottom:1px solid #ccc;font-family:Consolas,monospace}
+#elog{background:#000;color:#cfe;height:150px;overflow-y:auto;font-family:Consolas,monospace;font-size:11px;padding:6px}
+#tripO{display:none;position:fixed;inset:0;background:rgba(180,0,0,.93);z-index:99;color:#fff;text-align:center;padding-top:14vh;animation:bl .7s infinite}
+#tripO h1{font-size:56px;letter-spacing:3px}
+canvas#tr{width:100%;background:#0a0f0a;display:block;border:1px solid #000}
+.leg{display:flex;gap:12px;background:#111;color:#ddd;font-family:Consolas,monospace;font-size:11px;padding:6px 10px;flex-wrap:wrap;align-items:center}
+.warnbox{background:#3a2c00;border:1px solid #ffcf7a;color:#ffe2a8;padding:8px;font-size:12px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="hd">
+<div class="sys"><b>Tashkent CHP — Unit 1 Combined Cycle</b><span>Mitsubishi GT + HRSG + ST • Honeywell / Yokogawa uslubidagi HMI • AVTONOM TRENER</span></div>
+<div class="almSum" id="almSum"><span class="trn">TRAINING — REAL EMAS</span><span class="alm ok">NO ALARM</span></div>
+<div class="clk"><div id="clk" style="font-size:15px">--:--:--</div><div style="font-size:11px;color:#9aa3ad" id="dstr"></div><div style="font-size:11px;color:#9aa3ad">Oper: Smmena operatori</div></div>
+<div class="nav">
+<button class="on" onclick="go(0,this)">OVERVIEW</button><button onclick="go(1,this)">GAS TURBINE</button><button onclick="go(2,this)">HRSG</button><button onclick="go(3,this)">STEAM TURBINE</button><button onclick="go(4,this)">ELECTRICAL</button><button onclick="go(5,this)">TREND / ALARM</button>
+</div></div>
+
+<div class="pg on" id="p0">
+<div class="warnbox">AVTONOM O'QUV STENDI — real DCS/PLC ga ulanmagan. IEM da namoyish uchun xavfsiz. Tartib: CEP → FWP → CW → FV → GT START → 52H → SYNC → AVR AUTO → YUK → MSV → ST ROLL → SYNC → YUK.</div>
+<div class="pn"><h3>Overview — Unit 1 blok sxemasi (1:1) <span id="stL">STOPPED</span></h3>
+<svg viewBox="0 0 1000 320">
+<text x="20" y="20" class="t">TABIIY GAZ (sariq) 2.5–3.2 MPa</text>
+<line x1="20" y1="42" x2="180" y2="42" class="pipeG" id="pg-gas"/>
+<g class="vlv cl" id="vFV0" onclick="openFP('FV')"><rect class="bd" x="180" y="22" width="64" height="40" rx="3"/><text x="212" y="38" text-anchor="middle" fill="#fff" font-size="10" font-weight="800">FV-101</text><text x="212" y="53" text-anchor="middle" fill="#fff" font-size="10" id="tFV0">CLOSED</text></g>
+<rect x="250" y="12" width="150" height="70" class="eq" id="eGT" onclick="openFP('GT')"/><text x="325" y="34" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">GT-1 MITSUBISHI</text><text x="325" y="52" text-anchor="middle" class="v" id="oGT">0 MW</text><text x="325" y="68" text-anchor="middle" class="t" id="oGTr">0 rpm</text>
+<line x1="400" y1="42" x2="470" y2="42" class="pipeS" id="pg-exh"/><text x="418" y="32" class="t">Chiqindi 550–620°C</text>
+<rect x="470" y="12" width="150" height="70" class="eq" id="eHRSG" onclick="openFP('HRSG')"/><text x="545" y="34" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">HRSG</text><text x="545" y="52" text-anchor="middle" class="v" id="oHP">0 MPa</text><text x="545" y="68" text-anchor="middle" class="t" id="oDR">Drum 0 mm</text>
+<line x1="620" y1="42" x2="690" y2="42" class="pipeS" id="pg-hp"/>
+<rect x="690" y="12" width="140" height="70" class="eq" id="eST" onclick="openFP('ST')"/><text x="760" y="34" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">ST-1</text><text x="760" y="52" text-anchor="middle" class="v" id="oST">0 MW</text><text x="760" y="68" text-anchor="middle" class="t" id="oSTr">0 rpm</text>
+<rect x="835" y="12" width="150" height="70" class="eq" id="eGEN" onclick="go(4,document.querySelectorAll('.nav button')[4])"/><text x="910" y="34" text-anchor="middle" fill="#fff" font-size="12" font-weight="800">GEN 15.75 kV</text><text x="910" y="52" text-anchor="middle" class="v" id="oMW">0 MW</text><text x="910" y="68" text-anchor="middle" class="t" id="oHZ">50.00 Hz</text>
+<text x="20" y="115" class="t">SUV / KONDENSAT (ko'k)</text>
+<line x1="20" y1="135" x2="790" y2="135" class="pipeW" id="pg-fw"/>
+<rect x="180" y="113" width="110" height="44" class="eq" id="eCEP" onclick="openFP('CEP')"/><text x="235" y="131" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">CEP-1</text><text x="235" y="147" text-anchor="middle" class="t" id="oCEP" fill="#fff">STOP</text>
+<rect x="470" y="113" width="110" height="44" class="eq" id="eFWP" onclick="openFP('FWP')"/><text x="525" y="131" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">FWP-1</text><text x="525" y="147" text-anchor="middle" class="t" id="oFWP">STOP</text>
+<text x="20" y="185" class="t">MOY TIZIMI (binafsha) — istalgan blokni bosing, Faceplate ochiladi</text>
+<line x1="20" y1="200" x2="525" y2="200" class="pipeO" id="pg-oil"/>
+<rect x="20" y="215" width="960" height="80" fill="#111"/>
+<text x="30" y="237" fill="#9aa3ad" font-size="11">GT: <tspan id="o1" fill="#fff">—</tspan></text>
+<text x="30" y="255" fill="#9aa3ad" font-size="11">HRSG/ST: <tspan id="o2" fill="#fff">—</tspan></text>
+<text x="30" y="273" fill="#9aa3ad" font-size="11">EL: <tspan id="o3" fill="#fff">—</tspan></text>
+<text x="30" y="291" fill="#9aa3ad" font-size="11">MOY/VIB: <tspan id="o4" fill="#fff">—</tspan></text>
+</svg></div>
+<div class="fpRow"><div class="card"><h4>Blokni ishga tushirish (qadamlar)</h4><div id="steps"></div></div>
+<div><div class="card"><h4>Tezkor buyruqlar</h4><div class="g2">
+<button class="b g" onclick="cmd('cep',1)">CEP START</button><button class="b" onclick="cmd('cep',0)">CEP STOP</button>
+<button class="b g" onclick="cmd('fwp',1)">FWP START</button><button class="b" onclick="cmd('fwp',0)">FWP STOP</button>
+<button class="b bl" onclick="cmd('gtstart',1)">GT START</button><button class="b bl" onclick="cmd('gtsync',1)">GT SYNC</button>
+<button class="b g" onclick="cmd('gtload',20)">GT +20 MW</button><button class="b" onclick="cmd('gtload',-20)">GT -20 MW</button>
+<button class="b g" onclick="cmd('msv',1)">MSV OPEN</button><button class="b" onclick="cmd('msv',0)">MSV CLOSE</button>
+<button class="b bl" onclick="cmd('stroll',1)">ST ROLL</button><button class="b bl" onclick="cmd('stsync',1)">ST SYNC</button>
+</div></div>
+<div class="card"><h4>Himoya</h4><button class="b r" style="width:100%" onclick="trip('OPERATOR TRIP')">UNIT TRIP</button></div></div></div></div>
+
+<div class="pg" id="p1"><div class="pn"><h3>Gas Turbine MHPS — yonilg'i + kompressor + kamera + turbina <span id="gtState">STOP</span></h3>
+<svg viewBox="0 0 1000 340">
+<text x="20" y="30" class="t">FUEL GAS 2.5–3.2 MPa (sariq)</text>
+<line x1="10" y1="55" x2="140" y2="55" class="pipeG" id="gP1"/>
+<g class="vlv cl" id="vFV" onclick="openFP('FV')"><rect class="bd" x="140" y="35" width="80" height="40" rx="3"/><text x="180" y="51" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">FV-101</text><text x="180" y="66" text-anchor="middle" fill="#fff" font-size="10" id="tFV">CLOSED</text></g>
+<line x1="220" y1="55" x2="280" y2="55" class="pipeG" id="gP2"/>
+<rect x="280" y="15" width="150" height="90" class="eq" id="eCMP"/><text x="355" y="37" text-anchor="middle" fill="#fff" font-weight="800">COMPRESSOR</text><text x="355" y="57" text-anchor="middle" class="t">IGV <tspan id="tIGV" fill="#fff">0%</tspan></text><text x="355" y="75" text-anchor="middle" class="t">Inlet 15 °C</text><text x="355" y="92" text-anchor="middle" class="t">Filter dP 0.5 kPa</text>
+<rect x="440" y="15" width="150" height="90" class="eq" id="eCMB"/><text x="515" y="37" text-anchor="middle" fill="#fff" font-weight="800">COMBUSTOR</text><text x="515" y="59" text-anchor="middle" class="v" id="tEXH">0 °C</text><text x="515" y="78" text-anchor="middle" class="t">EXHAUST 550–620</text><text x="515" y="94" text-anchor="middle" class="t" id="tFLAME">FLAME: YO'Q</text>
+<rect x="600" y="15" width="170" height="90" class="eq" id="eGTT"/><text x="685" y="37" text-anchor="middle" fill="#fff" font-weight="800">GT TURBINE</text><text x="685" y="59" text-anchor="middle" class="v" id="tRPM">0 rpm</text><text x="685" y="78" text-anchor="middle" class="t" id="tVIB">VIB 40 µm</text><text x="685" y="94" text-anchor="middle" class="t" id="tBRG">BRG 70 °C</text>
+<rect x="780" y="15" width="150" height="90" class="eq"/><text x="855" y="37" text-anchor="middle" fill="#fff" font-weight="800">GEN-GT</text><text x="855" y="59" text-anchor="middle" class="v" id="tGTP">0 MW</text><text x="855" y="78" text-anchor="middle" class="t">15.75 kV</text>
+<line x1="685" y1="105" x2="685" y2="170" class="pipeS" id="gP3"/>
+<rect x="580" y="170" width="210" height="52" fill="#3d454f" stroke="#7d8894"/><text x="685" y="190" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">HRSG ga → chiqindi gaz</text><text x="685" y="207" text-anchor="middle" class="t" id="tSTACK">STACK 0 °C</text>
+<text x="20" y="250" class="t">MOY (binafsha) 0.45 MPa • SO'VITISH SUVI (ko'k)</text>
+<line x1="20" y1="270" x2="440" y2="270" class="pipeO" id="gPO"/>
+<rect x="60" y="248" width="120" height="44" class="eq" id="eOIL" onclick="openFP('OIL')"/><text x="120" y="266" text-anchor="middle" fill="#fff" font-weight="700">MOP-1</text><text x="120" y="282" text-anchor="middle" class="t" id="tOIL">0.45 MPa</text>
+<line x1="20" y1="305" x2="440" y2="305" class="pipeW" id="gPW"/>
+<rect x="250" y="290" width="40" height="24" fill="#1c3a5c" stroke="#7d8894"/><text x="270" y="306" text-anchor="middle" fill="#fff" font-size="9">CW</text>
+</svg></div>
+<div class="fpRow"><div class="card"><h4>GT ko'rsatkichlar (1:1)</h4><div class="g2">
+<div class="dg" id="dRPM">0<small>RPM 2995–3005</small></div><div class="dg" id="dFUEL">0<small>FUEL 2.5–3.2 MPa</small></div>
+<div class="dg" id="dEXH">0<small>EXH 550–620 °C</small></div><div class="dg" id="dGTP">0<small>GT 150–230 MW</small></div>
+</div></div>
+<div class="card"><h4>GT boshqaruv</h4><div class="g2">
+<button class="b g" onclick="cmd('fv',1)">FV OPEN</button><button class="b" onclick="cmd('fv',0)">FV CLOSE</button>
+<button class="b bl" onclick="cmd('gtstart',1)">START</button><button class="b bl" onclick="cmd('gtsync',1)">SYNC</button>
+<button class="b g" onclick="cmd('gtload',20)">+20 MW</button><button class="b" onclick="cmd('gtload',-20)">-20 MW</button>
+</div></div></div></div>
+
+<div class="pg" id="p2"><div class="pn"><h3>HRSG 3-bosimli — HP 11 MPa/535°C • IP 2.8 MPa/300°C • LP 0.6 MPa/160°C <span id="hrsgState">STOP</span></h3>
+<svg viewBox="0 0 1000 430">
+<text x="20" y="22" class="t">GT CHIQINDI GAZI (qizil) — kirish <tspan id="hGASIN" fill="#fff">0 °C</tspan> • STACK <tspan id="hSTACK" fill="#fff">0 °C</tspan></text>
+<line x1="20" y1="38" x2="980" y2="38" class="pipeS" id="hGAS"/>
+<text x="20" y="70" class="t">HP KONTOUR 10–12 MPa</text>
+<rect x="40" y="80" width="220" height="96" class="eq" id="eDRUM" onclick="openFP('DRUM')"/><text x="150" y="102" text-anchor="middle" fill="#fff" font-weight="800">HP DRUM</text><text x="150" y="122" text-anchor="middle" class="v" id="hLVL">0 mm</text><text x="150" y="140" text-anchor="middle" class="t">SP 0 (−50…+50)</text><text x="150" y="156" text-anchor="middle" class="t" id="hP">10.0 MPa</text>
+<line x1="260" y1="120" x2="360" y2="120" class="pipeS" id="hP1"/>
+<rect x="360" y="80" width="200" height="96" class="eq"/><text x="460" y="102" text-anchor="middle" fill="#fff" font-weight="800">HP SUPERHEATER</text><text x="460" y="124" text-anchor="middle" class="v" id="hT">0 °C</text><text x="460" y="144" text-anchor="middle" class="t">Target 535 °C</text><text x="460" y="160" text-anchor="middle" class="t" id="hDESH">DESH AUTO</text>
+<line x1="560" y1="120" x2="660" y2="120" class="pipeS" id="hP2"/>
+<g class="vlv cl" id="vMSV" onclick="openFP('MSV')"><rect class="bd" x="660" y="100" width="70" height="40" rx="3"/><text x="695" y="116" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">MSV-HP</text><text x="695" y="131" text-anchor="middle" fill="#fff" font-size="10" id="tMSV">CLOSED</text></g>
+<text x="760" y="112" class="t">ST ga →</text>
+<text x="20" y="200" class="t">IP KONTOUR 2.5–3.0 MPa • LP KONTOUR 0.5–0.7 MPa</text>
+<rect x="40" y="210" width="170" height="76" class="eq" id="eIP" onclick="openFP('IPDRUM')"/><text x="125" y="230" text-anchor="middle" fill="#fff" font-weight="800">IP DRUM</text><text x="125" y="250" text-anchor="middle" class="v" id="hIPLVL">0 mm</text><text x="125" y="268" text-anchor="middle" class="t" id="hIP">2.5 MPa / 0 °C</text>
+<rect x="230" y="210" width="170" height="76" class="eq" id="eLP" onclick="openFP('LPDRUM')"/><text x="315" y="230" text-anchor="middle" fill="#fff" font-weight="800">LP DRUM</text><text x="315" y="250" text-anchor="middle" class="v" id="hLPLVL">0 mm</text><text x="315" y="268" text-anchor="middle" class="t" id="hLP">0.5 MPa / 0 °C</text>
+<g class="vlv cl" id="vIPV" onclick="openFP('IPV')"><rect class="bd" x="420" y="226" width="70" height="40" rx="3"/><text x="455" y="242" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">IP-ADM</text><text x="455" y="257" text-anchor="middle" fill="#fff" font-size="10" id="tIPV">CLOSED</text></g>
+<text x="500" y="252" class="t">IP ST ga →</text>
+<text x="20" y="312" class="t">TA'MINOT SUVI (ko'k): CONDENSER → CEP → DEAERATOR → FWP → HP/IP/LP</text>
+<line x1="20" y1="328" x2="980" y2="328" class="pipeW" id="hFW"/>
+<rect x="120" y="306" width="110" height="44" class="eq" id="eCEP2" onclick="openFP('CEP')"/><text x="175" y="324" text-anchor="middle" fill="#fff" font-weight="700">CEP-1</text><text x="175" y="340" text-anchor="middle" class="t" id="hCEP">STOP</text>
+<rect x="260" y="306" width="150" height="44" class="eq" id="eDEA" onclick="openFP('DEA')"/><text x="335" y="324" text-anchor="middle" fill="#fff" font-weight="700">DEAERATOR</text><text x="335" y="340" text-anchor="middle" class="t" id="hDEA">0.12 MPa</text>
+<rect x="440" y="306" width="110" height="44" class="eq" id="eFW" onclick="openFP('FWP')"/><text x="495" y="324" text-anchor="middle" fill="#fff" font-weight="700">FWP-1</text><text x="495" y="340" text-anchor="middle" class="t" id="hFW2">STOP</text>
+<g class="vlv cl" id="vFWCV" onclick="openFP('FWCV')"><rect class="bd" x="580" y="306" width="80" height="44" rx="3"/><text x="620" y="324" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">FWCV-HP</text><text x="620" y="340" text-anchor="middle" fill="#fff" font-size="10" id="tFWCV">AUTO 50%</text></g>
+<text x="680" y="334" class="t">→ HP/IP/LP barabanlar</text>
+<text x="20" y="380" class="t">M701F standart: gaz kirish 550–620°C • HP 535°C • IP 300°C • LP 160°C • Stack 95–120°C • Drum trip ±80 mm</text>
+<rect x="20" y="388" width="960" height="26" fill="#111"/><text x="30" y="405" fill="#9aa3ad" font-size="11">HRSG: <tspan id="oHRSG" fill="#fff">—</tspan></text>
+</svg></div>
+<div class="fpRow"><div class="card"><h4>HRSG ko'rsatkich (M701F standart)</h4><div class="g2"><div class="dg" id="dHP">0<small>HP MPa 10–12</small></div><div class="dg" id="dHT">0<small>HP °C →535</small></div><div class="dg" id="dLVL">0<small>HP DRUM mm</small></div><div class="dg" id="dIP">0<small>IP 2.8 MPa</small></div><div class="dg" id="dLP">0<small>LP 0.6 MPa</small></div><div class="dg" id="dSTACK">0<small>STACK °C</small></div><div class="dg" id="dDEA">0<small>DEA MPa</small></div><div class="dg" id="dVAC2">0<small>VAC kPa</small></div></div></div>
+<div class="card"><h4>HRSG boshqaruv</h4><div class="g2"><button class="b g" onclick="cmd('fwp',1)">FWP START</button><button class="b" onclick="cmd('fwp',0)">FWP STOP</button><button class="b g" onclick="cmd('msv',1)">MSV-HP OPEN</button><button class="b" onclick="cmd('msv',0)">MSV-HP CLOSE</button><button class="b g" onclick="cmd('ipv',1)">IP-ADM OPEN</button><button class="b" onclick="cmd('ipv',0)">IP-ADM CLOSE</button></div><div style="font-size:11px;color:#9aa3ad;margin-top:6px">FWCV-HP avtomatik (drum sathiga qarab 0–100%) • Desuperheater AUTO</div></div></div></div>
+
+<div class="pg" id="p3"><div class="pn"><h3>Steam Turbine — HP / IP / LP + kondensator + CW <span id="stState">STOP</span></h3>
+<svg viewBox="0 0 1000 430">
+<text x="20" y="22" class="t">HP BUG' 10–12 MPa / 535°C (qizil)</text>
+<line x1="20" y1="42" x2="150" y2="42" class="pipeS" id="sP0"/>
+<g class="vlv cl" id="vMSV2" onclick="openFP('MSV')"><rect class="bd" x="150" y="22" width="70" height="40" rx="3"/><text x="185" y="38" text-anchor="middle" fill="#fff" font-size="10" font-weight="800">MSV-HP</text><text x="185" y="53" text-anchor="middle" fill="#fff" font-size="10" id="tMSV2">CLOSED</text></g>
+<g class="vlv cl" id="vCV" onclick="openFP('CV')"><rect class="bd" x="230" y="22" width="70" height="40" rx="3"/><text x="265" y="38" text-anchor="middle" fill="#fff" font-size="10" font-weight="800">CV-HP</text><text x="265" y="53" text-anchor="middle" fill="#fff" font-size="10" id="tCV">0%</text></g>
+<rect x="310" y="12" width="130" height="90" class="eq" id="eHP" onclick="openFP('ST')"/><text x="375" y="34" text-anchor="middle" fill="#fff" font-weight="800">HP SECTION</text><text x="375" y="54" text-anchor="middle" class="v" id="sHP">0 °C</text><text x="375" y="72" text-anchor="middle" class="t" id="sHPB">BRG#1 0 °C</text><text x="375" y="88" text-anchor="middle" class="t" id="sVIBH">VIB-H 0 µm</text>
+<text x="450" y="30" class="t">IP bug' 2.8 MPa ↓</text>
+<line x1="470" y1="42" x2="470" y2="80" class="pipeS" id="sPIP"/>
+<g class="vlv cl" id="vIPCV" onclick="openFP('IPCV')"><rect class="bd" x="440" y="80" width="70" height="36" rx="3"/><text x="475" y="94" text-anchor="middle" fill="#fff" font-size="10" font-weight="800">IP-CV</text><text x="475" y="108" text-anchor="middle" fill="#fff" font-size="10" id="tIPCV">0%</text></g>
+<rect x="520" y="12" width="130" height="90" class="eq"/><text x="585" y="34" text-anchor="middle" fill="#fff" font-weight="800">IP SECTION</text><text x="585" y="54" text-anchor="middle" class="v" id="sIP">0 °C</text><text x="585" y="72" text-anchor="middle" class="t" id="sVIB">VIB-IP 0 µm</text><text x="585" y="88" text-anchor="middle" class="t">REHEAT 535 °C</text>
+<rect x="660" y="12" width="120" height="90" class="eq"/><text x="720" y="34" text-anchor="middle" fill="#fff" font-weight="800">LP SECTION</text><text x="720" y="54" text-anchor="middle" class="v" id="sLP">0 °C</text><text x="720" y="72" text-anchor="middle" class="t" id="sVAC">-30 kPa</text><text x="720" y="88" text-anchor="middle" class="t" id="sEXH">EXH 0 °C</text>
+<rect x="790" y="12" width="150" height="90" class="eq"/><text x="865" y="34" text-anchor="middle" fill="#fff" font-weight="800">GEN-ST</text><text x="865" y="56" text-anchor="middle" class="v" id="sMW">0 MW</text><text x="865" y="74" text-anchor="middle" class="t" id="sRPM">0 rpm</text><text x="865" y="90" text-anchor="middle" class="t" id="sTG">TURN GEAR: ON</text>
+<text x="20" y="135" class="t">KONDENSATOR −92 kPa + KONDENSAT + SOVITISH SUVI (ko'k)</text>
+<rect x="520" y="145" width="260" height="70" fill="#1c3a5c" stroke="#7d8894" id="eCOND"/><text x="650" y="165" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">CONDENSER</text><text x="650" y="183" text-anchor="middle" class="v" id="sVAC2">-30 kPa</text><text x="650" y="199" text-anchor="middle" class="t" id="sCONDT">HOTWELL 0 °C • LVL 0 mm</text>
+<line x1="40" y1="250" x2="940" y2="250" class="pipeW" id="sPW"/>
+<rect x="60" y="228" width="110" height="44" class="eq" id="eCEP3" onclick="openFP('CEP')"/><text x="115" y="246" text-anchor="middle" fill="#fff" font-weight="700">CEP-1</text><text x="115" y="262" text-anchor="middle" class="t" id="sCEP">STOP</text>
+<rect x="200" y="228" width="120" height="44" class="eq" id="eCW" onclick="openFP('CW')"/><text x="260" y="246" text-anchor="middle" fill="#fff" font-weight="700">CW-P1</text><text x="260" y="262" text-anchor="middle" class="t" id="sCW">STOP 0 °C</text>
+<rect x="350" y="228" width="130" height="44" class="eq"/><text x="415" y="246" text-anchor="middle" fill="#fff" font-weight="700">VAC PUMP</text><text x="415" y="262" text-anchor="middle" class="t" id="sVACP">STOP</text>
+<text x="20" y="300" class="t">MOY + VIBRATSIYA (Experion PKS standart: VIB trip 125 µm, BRG trip 110 °C)</text>
+<line x1="20" y1="318" x2="940" y2="318" class="pipeO" id="sPO"/>
+<rect x="20" y="330" width="960" height="70" fill="#111"/>
+<text x="30" y="350" fill="#9aa3ad" font-size="11">ST: <tspan id="oST2" fill="#fff">—</tspan></text>
+<text x="30" y="368" fill="#9aa3ad" font-size="11">PODSHIPNIK: <tspan id="oBRG" fill="#fff">—</tspan></text>
+<text x="30" y="386" fill="#9aa3ad" font-size="11">VAKUUM: <tspan id="oVAC" fill="#fff">—</tspan></text>
+</svg></div>
+<div class="fpRow"><div class="card"><h4>ST ko'rsatkich (80–120 MW)</h4><div class="g2"><div class="dg" id="dSRPM">0<small>RPM 3000</small></div><div class="dg" id="dST">0<small>MW 80–120</small></div><div class="dg" id="dSVIB">0<small>VIB-H µm &lt;125</small></div><div class="dg" id="dSVIB2">0<small>VIB-IP µm &lt;125</small></div><div class="dg" id="dBRG">0<small>BRG#1 °C &lt;110</small></div><div class="dg" id="dBRG2">0<small>BRG#2 °C &lt;110</small></div><div class="dg" id="dCVAC">0<small>VAC kPa →−92</small></div><div class="dg" id="dCW">0<small>CW °C</small></div></div></div>
+<div class="card"><h4>ST boshqaruv</h4><div class="g2"><button class="b g" onclick="cmd('msv',1)">MSV-HP OPEN</button><button class="b" onclick="cmd('msv',0)">MSV-HP CLOSE</button><button class="b bl" onclick="cmd('cv',20)">CV-HP +20%</button><button class="b" onclick="cmd('cv',-20)">CV-HP -20%</button><button class="b bl" onclick="cmd('ipcv',20)">IP-CV +20%</button><button class="b" onclick="cmd('ipcv',-20)">IP-CV -20%</button><button class="b bl" onclick="cmd('stroll',1)">ROLL</button><button class="b bl" onclick="cmd('stsync',1)">SYNC</button><button class="b g" onclick="cmd('stload',20)">+20 MW</button><button class="b" onclick="cmd('stload',-20)">-20 MW</button><button class="b g" onclick="cmd('cw',1)">CW START</button><button class="b" onclick="cmd('cw',0)">CW STOP</button></div></div></div></div>
+
+<div class="pg" id="p4"><div class="pn"><h3>Electrical — GEN 15.75 kV • TR 15.75/110 kV • GRID 110 kV • AVR qo'zg'atish <span id="elState">DE-ENERGIZED</span></h3>
+<svg viewBox="0 0 1000 430">
+<text x="20" y="22" class="t">GENERATOR (sariq shina) — P / Q / cosφ • qo'zg'atish AVR</text>
+<rect x="20" y="32" width="220" height="120" class="eq" id="eGEN2" onclick="openFP('GEN')"/><text x="130" y="54" text-anchor="middle" fill="#fff" font-weight="800">GEN-1 (GT+ST)</text><text x="130" y="76" text-anchor="middle" class="v" id="eMW">0 MW</text><text x="130" y="94" text-anchor="middle" class="v" id="eMVAR" style="font-size:11px">0 MVAR</text><text x="130" y="112" text-anchor="middle" class="t" id="eV">15.75 kV</text><text x="130" y="128" text-anchor="middle" class="t" id="eAMP">Stator 0 A</text><text x="130" y="144" text-anchor="middle" class="t" id="eH2">H2 0.30 MPa / 40 °C</text>
+<rect x="250" y="32" width="180" height="120" class="eq" id="eAVR" onclick="openFP('AVR')"/><text x="340" y="54" text-anchor="middle" fill="#fff" font-weight="800">AVR / EXCITER</text><text x="340" y="74" text-anchor="middle" class="v" id="eAVRM" style="font-size:11px">AVR: MANUAL</text><text x="340" y="94" text-anchor="middle" class="t" id="eEXCI">Exc I 0 A</text><text x="340" y="112" text-anchor="middle" class="t" id="eEXCV">Exc V 0 V</text><text x="340" y="130" text-anchor="middle" class="t" id="eCOS">cosφ 0.87</text><text x="340" y="146" text-anchor="middle" class="t">Q rejim: <tspan id="eQMODE" fill="#fff">—</tspan></text>
+<g class="vlv cl" id="vBRK" onclick="openFP('BRK')"><rect class="bd" x="445" y="70" width="70" height="44" rx="3"/><text x="480" y="88" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">52G</text><text x="480" y="104" text-anchor="middle" fill="#fff" font-size="10" id="tBRK">OPEN</text></g>
+<text x="430" y="130" class="t">Gen uzgich</text>
+<rect x="525" y="32" width="190" height="120" class="eq" id="eTR" onclick="openFP('TR')"/><text x="620" y="54" text-anchor="middle" fill="#fff" font-weight="800">TR-1 15.75/110 kV</text><text x="620" y="76" text-anchor="middle" class="v" id="eTRLOAD">0 %</text><text x="620" y="96" text-anchor="middle" class="t" id="eTRT">Moy 25 °C</text><text x="620" y="114" text-anchor="middle" class="t" id="eTRV">HV 110.0 kV</text><text x="620" y="132" text-anchor="middle" class="t">Sovutish: ONAN</text>
+<g class="vlv cl" id="vBRKH" onclick="openFP('BRKH')"><rect class="bd" x="720" y="70" width="70" height="44" rx="3"/><text x="755" y="88" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">52H</text><text x="755" y="104" text-anchor="middle" fill="#fff" font-size="10" id="tBRKH">OPEN</text></g>
+<text x="705" y="130" class="t">110 kV uzgich</text>
+<line x1="790" y1="92" x2="980" y2="92" stroke="#e8c33d" stroke-width="9" id="eBUS"/>
+<rect x="800" y="110" width="180" height="90" fill="#0e2a47" stroke="#7d8894" id="eGRID"/><text x="890" y="132" text-anchor="middle" fill="#fff" font-weight="800">GRID 110 kV</text><text x="890" y="154" text-anchor="middle" class="v" id="eHZ">50.00 Hz</text><text x="890" y="172" text-anchor="middle" class="t" id="eGRIDV">110.0 kV</text><text x="890" y="188" text-anchor="middle" class="t" id="eSYN">SYNC: —</text>
+<text x="20" y="180" class="t">SINXRONIZATSIYA SHARTLARI (Experion PKS standart: Δf &lt;0.1 Hz • ΔU &lt;5% • Δφ &lt;10°)</text>
+<rect x="20" y="188" width="960" height="60" fill="#111"/>
+<text x="30" y="210" fill="#9aa3ad" font-size="11">SYNC CHECK: <tspan id="oSYN" fill="#fff">—</tspan></text>
+<text x="30" y="230" fill="#9aa3ad" font-size="11">XUSUSIY EHTIYOZ (6 kV): <tspan id="oHOUSE" fill="#fff">—</tspan></text>
+<text x="20" y="272" class="t">QO'ZG'ATISH (AVR) — kuchlanish / reaktiv quvvat boshqaruvi</text>
+<line x1="20" y1="288" x2="700" y2="288" class="pipeG" id="eEXCLINE" style="stroke-width:6"/>
+<rect x="20" y="300" width="960" height="60" fill="#111"/>
+<text x="30" y="322" fill="#9aa3ad" font-size="11">AVR: <tspan id="oAVR" fill="#fff">—</tspan></text>
+<text x="30" y="342" fill="#9aa3ad" font-size="11">HIMOYALAR: <tspan id="oELPROT" fill="#fff">87G differensial • 51V • 40Z (qo'zg'atish yo'qolishi) • 59N • 81U/O</tspan></text>
+</svg></div>
+<div class="fpRow"><div class="card"><h4>Elektro ko'rsatkich (1:1)</h4><div class="g2"><div class="dg" id="dKV">15.75<small>GEN kV</small></div><div class="dg" id="dTOT">0<small>TOTAL MW</small></div><div class="dg" id="dMVAR">0<small>MVAR</small></div><div class="dg" id="dCOS">0.87<small>cosφ 0.85–0.90</small></div><div class="dg" id="dEXCI">0<small>EXC I, A</small></div><div class="dg" id="dTRT">25<small>TR moy °C</small></div><div class="dg" id="dHZ">50.00<small>GRID Hz</small></div><div class="dg" id="dGRIDV">110.0<small>GRID kV</small></div></div></div>
+<div class="card"><h4>Breaker + AVR boshqaruv</h4><div class="g2"><button class="b g" onclick="cmd('brk',1)">52G CLOSE</button><button class="b r" onclick="cmd('brk',0)">52G OPEN</button><button class="b g" onclick="cmd('brkh',1)">52H CLOSE</button><button class="b r" onclick="cmd('brkh',0)">52H OPEN</button><button class="b bl" onclick="cmd('avr',1)">AVR AUTO</button><button class="b" onclick="cmd('avr',0)">AVR MAN</button><button class="b g" onclick="cmd('exc',50)">EXC + (Q+)</button><button class="b" onclick="cmd('exc',-50)">EXC − (Q−)</button></div><div style="font-size:11px;color:#9aa3ad;margin-top:6px">Sinxronizatsiyadan oldin 52H yopiq, Δf/ΔU shartlari bajarilishi kerak. AVR AUTO da kuchlanish 15.75 kV ushlanadi.</div></div></div></div>
+
+<div class="pg" id="p5"><div class="pn"><h3>Trend + Alarm + Instruktor</h3>
+<div class="leg"><span style="color:#ff5b5b">■ EXH °C</span><span style="color:#3dff7a">■ Moy MPa×100</span><span style="color:#4aa8ff">■ Jami MW</span><span style="color:#ffcf7a">■ Drum+100</span><span style="color:#ff9f43">■ HP MPa×28</span><span style="color:#c084fc">■ IP MPa×70</span><span style="color:#5eead4">■ LP MPa×200</span><span id="trV" style="margin-left:auto"></span><button class="b" onclick="freeze=!freeze" style="padding:2px 8px">FREEZE</button></div>
+<canvas id="tr" height="260"></canvas></div>
+<div class="fpRow"><div><div class="pn"><h3>Alarm list <button class="b" onclick="ack()" style="padding:2px 10px">ACK</button></h3><table class="al"><thead><tr><th>Vaqt</th><th>Tag</th><th>Ta'rif</th><th>PR</th></tr></thead><tbody id="alms"><tr><td colspan="4">No alarm</td></tr></tbody></table></div>
+<div class="pn"><h3>Event log / Score <span id="score"></span></h3><div id="elog"></div><div style="padding:8px;display:flex;gap:6px"><button class="b" style="flex:1" onclick="exportLog()">.txt yuklash</button><button class="b" style="flex:1" onclick="resetAll()">RESET</button></div></div></div>
+<div><div class="card"><h4>Instruktor ssenariylari (IEM imtihon uchun)</h4><div class="g2"><button class="b" onclick="inject('fuel')">Fuel P ↓</button><button class="b" onclick="inject('drum')">Drum ↑↓</button><button class="b" onclick="inject('freq')">Freq 49.4 Hz</button><button class="b" onclick="inject('vib')">VIB ↑</button><button class="b" onclick="inject('oil')">Oil ↓</button><button class="b r" onclick="inject('over')">Overspeed</button></div><div style="margin-top:6px;font-size:12px">Faol: <b id="fltN">YO'Q</b> | Reaksiya: <b id="react">—</b> (norma 15 s) | OK:<b id="sG">0</b> XATO:<b id="sB">0</b></div></div>
+<div class="card"><h4>Chegaralar (IEM reglament)</h4><div style="font-size:12px;line-height:1.7">GT 2995–3005 rpm • Fuel 2.5–3.2 MPa • EXH 550–620 °C • HP 10–12 MPa / 535 °C • IP 2.5–3.0 MPa • LP 0.5–0.7 MPa • Drum ±50 mm (trip ±80) • ST 80–120 MW • Freq &lt;49.5 Alarm • VIB &gt;125 TRIP • BRG &gt;110 TRIP • Oil &lt;0.20 TRIP • 52H→52G sync (Δf&lt;0.2 Hz) • AVR AUTO 15.75 kV • TR moy &lt;85 °C</div></div></div></div></div>
+
+<div id="fp"><h4><span id="fpT">TAG</span><span style="cursor:pointer" onclick="closeFP()">✕</span></h4><div class="bd">
+<div class="row"><span>PV (joriy)</span><b id="fpPV">—</b></div><div class="row"><span>SP (topshiriq)</span><b id="fpSP">—</b></div><div class="row"><span>Mode</span><b id="fpM">AUTO</b></div>
+<label style="font-size:11px">Setpoint kiritish:</label><input id="fpIn" type="number" step="any"><div class="mbtns"><button onclick="fpMode('AUTO',this)">AUTO</button><button onclick="fpMode('MAN',this)">MAN</button><button onclick="fpCmd(1)">OPEN</button><button onclick="fpCmd(0)">CLOSE</button></div>
+<button class="b bl" style="width:100%" onclick="fpApply()">QO'LLASH</button>
+<div style="font-size:11px;color:#555;margin-top:6px">FV, MSV, CV, IPCV, IPV, DRUM, IPDRUM, LPDRUM, DEA, FWCV, FWP, CEP, CW, BRK, BRKH, GEN, AVR, TR, GT, HRSG, ST, OIL</div>
+</div></div>
+
+<div class="ft"><button class="b" onclick="ack()">ALARM ACK</button><button class="b" onclick="resetAll()">RESET</button><span class="health">System Health: <span class="okdot">●</span> Master PLC Online | <span class="okdot">●</span> Redundant Network OK | <span id="ftAl">0 alarm</span></span><span style="margin-left:auto" class="health">AVTONOM TRENER v2.0 — real qurilmaga ulanmagan</span></div>
+<div id="tripO"><h1>UNIT TRIP</h1><p id="tripR"></p><p style="font-size:13px">Qayta ishga tushirishdan oldin RESET bosing va jurnalni saqlang.</p><br><button class="b" style="font-size:16px;padding:12px 30px" onclick="resetAll()">RESET</button></div>
+
+<script>
+let S={cep:0,fwp:0,fv:0,igv:0,gtRun:0,gtSync:0,gtP:0,rpm:0,fuel:0,exh:20,msv:0,cv:0,ipcv:0,ipv:0,stRun:0,stSync:0,stP:0,stRpm:0,hpP:8,hpT:20,drum:0,ipP:0.4,ipT:20,ipLvl:0,lpP:0.1,lpT:20,lpLvl:0,gasIn:20,stack:20,deaP:0.02,deaT:20,fwcv:50,cdp:0.1,vac:-30,condT:20,condLvl:0,cw:0,cwT:28,vacp:0,oil:.45,vib:40,vib2:38,brg:70,brg2:68,freq:50,gv:15.75,cos:.87,mvar:0,excI:0,excV:0,avr:0,trT:25,gridV:110,brkh:0,brk:0,flt:null,fltT:0,trip:0,ph:0};
+let G=0,B=0,hist=[],freeze=false,fpTag=null;
+const $=id=>document.getElementById(id);
+const now=()=>new Date().toLocaleTimeString('uz-UZ',{hour12:false});
+setInterval(()=>{const d=new Date();$('clk').textContent=d.toLocaleTimeString('uz-UZ',{hour12:false});$('dstr').textContent=d.toLocaleDateString('uz-UZ');},1000);
+function go(i,b){document.querySelectorAll('.pg').forEach((p,k)=>p.classList.toggle('on',k===i));document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');if(i===5)drawTr();}
+function log(m,c){const e=document.createElement('div');e.textContent=now()+' '+m;if(c)e.style.color=c;$('elog').prepend(e);}
+function good(m){G++;$('sG').textContent=G;$('score').textContent=`OK:${G} X:${B}`;log('OK '+m,'#3dff7a');}
+function bad(m,t){B++;$('sB').textContent=B;$('score').textContent=`OK:${G} X:${B}`;log('XATO '+m,'#ff6b6e');alm(t||m,2,'OPER');}
+function alm(txt,pr,tag){const tb=$('alms');if(tb.textContent.includes('No alarm'))tb.innerHTML='';const tr=document.createElement('tr');tr.innerHTML=`<td>${now()}</td><td>${tag}</td><td>${txt}</td><td>${pr===1?'<span style="background:#d92626;color:#fff;padding:2px 6px">P1</span>':'<span style="background:#e8a13d;padding:2px 6px">P2</span>'}</td>`;tb.prepend(tr);updSum();}
+function updSum(){const n=document.querySelectorAll('#alms tr').length;const rows=[...document.querySelectorAll('#alms tr')].slice(0,3).map(r=>r.cells[2]?r.cells[2].textContent:'').join(' | ');const box=$('almSum');if($('alms').textContent.includes('No alarm')){box.innerHTML='<span class="trn">TRAINING — REAL EMAS</span><span class="alm ok">NO ALARM</span>';return;}box.innerHTML=`<span class="trn">TRAINING</span><span class="alm crit">${rows.slice(0,140)}</span>`;$('ftAl').textContent=n+' alarm';}
+function ack(){log('ACK — operator tasdiqladi');$('almSum').innerHTML='<span class="trn">TRAINING</span><span class="alm warn">ACK — kuzatuv davom etmoqda</span>';}
+const FPD={'FV':()=>['FV-101 Fuel Gas',S.fuel.toFixed(2)+' MPa','2.80 MPa'],'GT':()=>['GT-1 Mitsubishi M701F',Math.round(S.rpm)+' rpm','3000 rpm'],'HRSG':()=>['HRSG HP',S.hpP.toFixed(2)+' MPa','11.00 MPa'],'ST':()=>['ST-1',Math.round(S.stP)+' MW','100 MW'],'MSV':()=>['MSV HP bug`',S.msv?'OPEN':'CLOSED','OPEN'],'CV':()=>['CV HP klapan',S.cv+' %','60 %'],'DRUM':()=>['HP DRUM sath',Math.round(S.drum)+' mm','0 mm'],'FWP':()=>['FWP-1 ta`minot nasosi',S.fwp?'RUN':'STOP','RUN'],'CEP':()=>['CEP-1 kondensat nasosi',S.cep?'RUN':'STOP','RUN'],'BRK':()=>['52G generator uzgich',S.brk?'CLOSED':'OPEN','CLOSED'],'IPCV':()=>['IP-CV klapan',Math.round(S.ipcv)+' %','50 %'],'IPV':()=>['IP-ADM klapan',S.ipv?'OPEN':'CLOSED','OPEN'],'IPDRUM':()=>['IP DRUM sath',Math.round(S.ipLvl)+' mm','0 mm'],'LPDRUM':()=>['LP DRUM sath',Math.round(S.lpLvl)+' mm','0 mm'],'DEA':()=>['Deaerator',S.deaP.toFixed(2)+' MPa','0.60 MPa'],'FWCV':()=>['FWCV-HP',Math.round(S.fwcv)+' %','AUTO'],'CW':()=>['CW-P1',S.cw?'RUN':'STOP','RUN'],'GEN':()=>['GEN-1 15.75 kV',Math.round(S.gtP+S.stP)+' MW / '+Math.round(S.mvar)+' MVAR','310 MW'],'AVR':()=>['AVR qozgatish',S.avr?'AUTO':'MAN','AUTO'],'TR':()=>['TR-1 15.75/110 kV',Math.round(S.trT)+' °C','65 °C'],'BRKH':()=>['52H 110 kV uzgich',S.brkh?'CLOSED':'OPEN','CLOSED'],'OIL':()=>['MOP-1 moy nasosi',S.oil.toFixed(2)+' MPa','0.45 MPa']};
+function openFP(t){fpTag=t;const f=FPD[t]?FPD[t]():[t,'—','—'];$('fpT').textContent=t+' — '+f[0];$('fpPV').textContent=f[1];$('fpSP').textContent=f[2];$('fp').style.display='block';}
+function closeFP(){$('fp').style.display='none';}
+function fpMode(m,b){document.querySelectorAll('#fp .mbtns button').forEach(x=>x.classList.remove('on'));b.classList.add('on');$('fpM').textContent=m;log(`${fpTag} mode → ${m}`);}
+function fpCmd(o){applyTag(fpTag,o?1:0);closeFP();}
+function fpApply(){const v=parseFloat($('fpIn').value);if(isNaN(v)){log('SP kiritilmadi');return;}if(fpTag==='DRUM'){S.drum=v;log(`DRUM SP ${v} mm`);}if(fpTag==='IPDRUM'){S.ipLvl=v;log(`IP DRUM SP ${v} mm`);}if(fpTag==='LPDRUM'){S.lpLvl=v;log(`LP DRUM SP ${v} mm`);}if(fpTag==='CV'){S.cv=Math.max(0,Math.min(100,v));log(`CV-HP SP ${v}%`);}if(fpTag==='IPCV'){S.ipcv=Math.max(0,Math.min(100,v));log(`IP-CV SP ${v}%`);}closeFP();upd();}
+function applyTag(t,o){if(t==='FV')cmd('fv',o);if(t==='MSV')cmd('msv',o);if(t==='CV')cmd('cv',o?80:0);if(t==='IPCV')cmd('ipcv',o?60:0);if(t==='IPV')cmd('ipv',o);if(t==='FWP')cmd('fwp',o);if(t==='CEP')cmd('cep',o);if(t==='CW')cmd('cw',o);if(t==='BRK')cmd('brk',o);if(t==='BRKH')cmd('brkh',o);if(t==='AVR')cmd('avr',o);}
+function cmd(k,v){
+if(S.trip)return log('TRIP holati — avval RESET','#ff6b6e');
+if(k==='cep'){S.cep=v;v?good('CEP-1 ishga tushdi'):bad('CEP to`xtatildi','CEP STOP');}
+if(k==='fwp'){if(v&&!S.cep){bad('FWP interlock: avval CEP kerak','Interlock FWP');return;}S.fwp=v;v?(S.ph=Math.max(S.ph,1),good('FWP-1 ishga tushdi')):bad('FWP to`xtatildi','FWP STOP');}
+if(k==='fv'){if(v&&!S.fwp){bad('FV interlock: avval FWP kerak','FV interlock');return;}S.fv=v;log(v?'FV-101 OPEN':'FV-101 CLOSED');}
+if(k==='gtstart'){if(!S.fv||!S.fwp){bad('GT START interlock: FV+FWP kerak','GT interlock');return;}S.gtRun=1;S.ph=Math.max(S.ph,2);good('GT START — 3000 rpm ga chiqmoqda');}
+if(k==='gtsync'){if(S.rpm<2950){bad('GT SYNC: avval 3000 rpm kerak','GT sync');return;}if(!S.brkh){bad('GT SYNC interlock: avval 52H (110 kV) ni yoping','SYNC interlock');return;}S.gtSync=1;S.brk=1;S.ph=Math.max(S.ph,3);good('GT SYNC + 52G CLOSED (sync-check OK)');}
+if(k==='gtload'){if(!S.gtSync){bad('Avval GT SYNC kerak','GT load');return;}S.gtP=Math.max(0,Math.min(230,S.gtP+v));log(`GT yuk ${Math.round(S.gtP)} MW`);if(S.flt&&v>0)bad('Nosozlikda yuk oshirish man!','GT load');if(S.flt&&v<0)resolve('GT yuki tushirildi — to`g`ri reaksiya');}
+if(k==='msv'){if(v&&S.hpP<9){bad('MSV interlock: HP bosim past (<9 MPa)','MSV interlock');return;}S.msv=v;log(v?'MSV-HP OPEN':'MSV-HP CLOSE');}
+if(k==='ipv'){if(v&&S.ipP<2.0){bad('IP-ADM interlock: IP bosim past (<2 MPa)','IP interlock');return;}S.ipv=v;log(v?'IP-ADM OPEN':'IP-ADM CLOSE');}
+if(k==='ipcv'){S.ipcv=Math.max(0,Math.min(100,(v>1)?v:S.ipcv+v));log(`IP-CV ${Math.round(S.ipcv)}%`);}
+if(k==='cw'){S.cw=v;if(v){S.vacp=1;good('CW-P1 + VAC PUMP ishga tushdi');}else{S.vacp=0;bad('CW to`xtatildi — vakuum tushadi','CW STOP');}}
+if(k==='cv'){S.cv=Math.max(0,Math.min(100,(v>1)?v:S.cv+v));log(`CV ${Math.round(S.cv)}%`);}
+if(k==='stroll'){if(!S.msv||S.cv<15){bad('ST ROLL interlock: MSV OPEN + CV≥15% kerak','ST interlock');return;}if(S.vac>-60){bad('ST ROLL interlock: avval CW + vakuum (<−60 kPa) kerak','VAC interlock');return;}S.stRun=1;S.ph=Math.max(S.ph,4);good('ST ROLL boshlandi');}
+if(k==='stsync'){if(S.stRpm<2950){bad('ST SYNC: avval 3000 rpm kerak','ST sync');return;}S.stSync=1;S.ph=Math.max(S.ph,5);good('ST SYNC — tarmoqqa ulandi');}
+if(k==='stload'){if(!S.stSync){bad('Avval ST SYNC kerak','ST load');return;}S.stP=Math.max(0,Math.min(120,S.stP+v));log(`ST yuk ${Math.round(S.stP)} MW`);if(S.flt&&v>0)bad('Nosozlikda ST yuk oshirish man!','ST load');if(S.flt&&v<0)resolve('ST yuki tushirildi — to`g`ri reaksiya');}
+if(k==='brk'){if(v&&!S.brkh){bad('52G interlock: avval 52H (110 kV) yopiq bolishi kerak','SYNC interlock');return;}if(v&&Math.abs(S.freq-50)>0.2){bad('52G interlock: chastota farqi katta (>0.2 Hz)','SYNC check');return;}S.brk=v;log(v?'52G CLOSED — generator tarmoqda':'52G OPEN');if(!v&&(S.gtSync||S.stSync)){trip('Yuk ostida 52G ochildi');}}
+if(k==='brkh'){S.brkh=v;log(v?'52H CLOSED — 110 kV shinaga ulandi':'52H OPEN');if(!v&&S.brk){trip('52G yopiq holatda 52H ochildi');}}
+if(k==='avr'){S.avr=v;log(v?'AVR → AUTO (15.75 kV ushlaydi)':'AVR → MAN (qol rejim)');if(v)good('AVR AUTO ga olindi');}
+if(k==='exc'){if(!S.brk){bad('EXC: avval generator tarmoqqa ulansin (52G)','EXC interlock');return;}S.mvar=Math.max(-60,Math.min(120,S.mvar+v));log(`EXC ${v>0?'+':'−'} — Q=${Math.round(S.mvar)} MVAR`);}
+upd();drawSteps();}
+function inject(f){S.flt=f;S.fltT=Date.now();$('react').textContent='...kutmoqda';const n={fuel:'FUEL BOSIMI PAST',drum:'DRUM SATXI CHIQDI',freq:'TARMOOQ 49.4 Hz',vib:'VIBRATSIYA OSHMOQDA',oil:'MOY BOSIMI PAST',over:'OVERSPEED'};$('fltN').textContent=n[f];alm('Instruktor ssenariysi: '+n[f],1,'INSTR');upd();}
+function resolve(h){const dt=((Date.now()-S.fltT)/1000).toFixed(1);$('react').textContent=dt+' s';if(dt<=15)good(`${h} — ${dt}s da`);else bad(`Reaksiya kechikdi ${dt}s`,'Kechikish');S.flt=null;$('fltN').textContent="YO'Q";upd();}
+function trip(r){if(S.trip)return;S.trip=1;S.rpm=0;S.stRpm=0;S.gtP=0;S.stP=0;$('tripR').textContent=r;$('tripO').style.display='block';alm('UNIT TRIP — '+r,1,'PROT');log('TRIP: '+r,'#ff6b6e');upd();}
+function resetAll(){S={cep:0,fwp:0,fv:0,igv:0,gtRun:0,gtSync:0,gtP:0,rpm:0,fuel:0,exh:20,msv:0,cv:0,ipcv:0,ipv:0,stRun:0,stSync:0,stP:0,stRpm:0,hpP:8,hpT:20,drum:0,ipP:0.4,ipT:20,ipLvl:0,lpP:0.1,lpT:20,lpLvl:0,gasIn:20,stack:20,deaP:0.02,deaT:20,fwcv:50,cdp:0.1,vac:-30,condT:20,condLvl:0,cw:0,cwT:28,vacp:0,oil:.45,vib:40,vib2:38,brg:70,brg2:68,freq:50,gv:15.75,cos:.87,mvar:0,excI:0,excV:0,avr:0,trT:25,gridV:110,brkh:0,brk:0,flt:null,fltT:0,trip:0,ph:0};$('tripO').style.display='none';$('alms').innerHTML='<tr><td colspan="4">No alarm</td></tr>';$('fltN').textContent="YO'Q";$('react').textContent='—';updSum();upd();drawSteps();log('RESET — trener bosh holatga qaytdi');}
+function exportLog(){const t=[...document.querySelectorAll('#elog div')].map(d=>d.textContent).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([`Toshkent IEM U1 CCGT — o'quv jurnali OK:${G} XATO:${B}\nSana: ${new Date().toLocaleString('uz-UZ')}\n\n${t}`],{type:'text/plain'}));a.download='U1-CCGT-jurnal.txt';a.click();}
+const STEPSN=['1. CEP + FWP + CW — suv va vakuum','2. FV + GT START — 3000 rpm','3. 52H + GT SYNC + AVR AUTO + yuk','4. HRSG bosim + MSV-HP + IP-ADM','5. ST ROLL + SYNC + yuk 80–120 MW'];
+function drawSteps(){const e=$('steps');if(!e)return;e.innerHTML=STEPSN.map((t,i)=>`<div style="background:${i<S.ph?'#14532d':i===S.ph?'#5a4a12':'#222'};border:1px solid #555;padding:6px;margin-bottom:4px;color:#fff">${i<S.ph?'✓':(i+1)} — ${t}</div>`).join('');}
+function upd(){
+const tot=S.gtP+S.stP;
+$('stL').textContent=S.trip?'TRIP':tot>20?('LOAD '+Math.round(tot)+' MW'):S.gtRun||S.stRun?'ROLLING':'STOPPED';
+$('gtState').textContent=S.trip?'TRIP':S.gtSync?('LOAD '+Math.round(S.gtP)+' MW'):S.gtRun?'ROLLING '+Math.round(S.rpm)+' rpm':'STOP';
+$('oGT').textContent=Math.round(S.gtP)+' MW';$('oGTr').textContent=Math.round(S.rpm)+' rpm';
+$('oHP').textContent=S.hpP.toFixed(1)+' MPa';$('oDR').textContent='Drum '+Math.round(S.drum)+' mm';
+$('oST').textContent=Math.round(S.stP)+' MW';$('oSTr').textContent=Math.round(S.stRpm)+' rpm';
+$('oMW').textContent=Math.round(tot)+' MW';$('oHZ').textContent=S.freq.toFixed(2)+' Hz';
+$('oCEP').textContent=S.cep?'RUN':'STOP';$('oFWP').textContent=S.fwp?'RUN':'STOP';
+$('o1').textContent=`${Math.round(S.rpm)} rpm | ${Math.round(S.gtP)} MW | EXH ${Math.round(S.exh)} °C | Fuel ${S.fuel.toFixed(2)} MPa | IGV ${Math.round(S.igv)}%`;
+$('o2').textContent=`HP ${S.hpP.toFixed(1)} MPa / ${Math.round(S.hpT)} °C | Drum ${Math.round(S.drum)} mm | ST ${Math.round(S.stP)} MW | VAC ${Math.round(S.vac)} kPa`;
+$('o3').textContent=`${S.gv.toFixed(2)} kV | ${S.freq.toFixed(2)} Hz | cos ${S.cos.toFixed(2)} | 52G ${S.brk?'CLOSED':'OPEN'}`;
+$('o4').textContent=`Moy ${S.oil.toFixed(2)} MPa | VIB ${Math.round(S.vib)} µm | BRG ${Math.round(S.brg)} °C`;
+$('tFV').textContent=S.fv?'OPEN':'CLOSED';$('tFV0').textContent=S.fv?'OPEN':'CLOSED';
+$('vFV').setAttribute('class','vlv '+(S.fv?'op':'cl'));$('vFV0').setAttribute('class','vlv '+(S.fv?'op':'cl'));
+$('tRPM').textContent=Math.round(S.rpm)+' rpm';$('tGTP').textContent=Math.round(S.gtP)+' MW';
+$('tEXH').textContent=Math.round(S.exh)+' °C';$('tSTACK').textContent='STACK '+Math.round(S.exh-40)+' °C';
+$('tVIB').textContent='VIB '+Math.round(S.vib)+' µm';$('tBRG').textContent='BRG '+Math.round(S.brg)+' °C';
+$('tFLAME').textContent='FLAME: '+(S.fv&&S.gtRun?'BOR':'YO`Q');$('tIGV').textContent=Math.round(S.igv)+'%';
+$('tOIL').textContent=S.oil.toFixed(2)+' MPa';
+$('dRPM').innerHTML=Math.round(S.rpm)+'<small>RPM 2995–3005</small>';$('dFUEL').innerHTML=S.fuel.toFixed(2)+'<small>FUEL 2.5–3.2 MPa</small>';$('dEXH').innerHTML=Math.round(S.exh)+'<small>EXH 550–620 °C</small>';$('dGTP').innerHTML=Math.round(S.gtP)+'<small>GT 150–230 MW</small>';
+$('hLVL').textContent=Math.round(S.drum)+' mm';$('hP').textContent=S.hpP.toFixed(1)+' MPa';$('hT').textContent=Math.round(S.hpT)+' °C';$('hFW2').textContent=S.fwp?'RUN':'STOP';$('hCEP').textContent=S.cep?'RUN':'STOP';
+$('hGASIN').textContent=Math.round(S.gasIn)+' °C';$('hSTACK').textContent=Math.round(S.stack)+' °C';
+$('hIPLVL').textContent=Math.round(S.ipLvl)+' mm';$('hIP').textContent=S.ipP.toFixed(2)+' MPa / '+Math.round(S.ipT)+' °C';
+$('hLPLVL').textContent=Math.round(S.lpLvl)+' mm';$('hLP').textContent=S.lpP.toFixed(2)+' MPa / '+Math.round(S.lpT)+' °C';
+$('hDEA').textContent=S.deaP.toFixed(2)+' MPa / '+Math.round(S.deaT)+' °C';
+$('tMSV').textContent=S.msv?'OPEN':'CLOSED';$('vMSV').setAttribute('class','vlv '+(S.msv?'op':'cl'));
+$('tIPV').textContent=S.ipv?'OPEN':'CLOSED';$('vIPV').setAttribute('class','vlv '+(S.ipv?'op':'cl'));
+$('tFWCV').textContent='AUTO '+Math.round(S.fwcv)+'%';$('vFWCV').setAttribute('class','vlv '+(S.fwp?'op':'cl'));
+$('hDESH').textContent='DESH '+(S.hpT>545?'OPEN':'AUTO');
+$('hrsgState').textContent=S.gtRun?('GAS '+Math.round(S.gasIn)+'°C → HP '+S.hpP.toFixed(1)+' MPa'):'STOP';
+$('oHRSG').textContent=`HP ${S.hpP.toFixed(1)} MPa/${Math.round(S.hpT)}°C | IP ${S.ipP.toFixed(2)} MPa | LP ${S.lpP.toFixed(2)} MPa | Stack ${Math.round(S.stack)}°C | DEA ${S.deaP.toFixed(2)} MPa`;
+$('dHP').innerHTML=S.hpP.toFixed(1)+'<small>HP MPa 10–12</small>';$('dHT').innerHTML=Math.round(S.hpT)+'<small>HP °C →535</small>';$('dLVL').innerHTML=Math.round(S.drum)+'<small>HP DRUM mm</small>';
+$('dIP').innerHTML=S.ipP.toFixed(2)+'<small>IP 2.5–3.0 MPa</small>';$('dLP').innerHTML=S.lpP.toFixed(2)+'<small>LP 0.5–0.7 MPa</small>';
+$('dSTACK').innerHTML=Math.round(S.stack)+'<small>STACK 95–120 °C</small>';$('dDEA').innerHTML=S.deaP.toFixed(2)+'<small>DEA MPa</small>';$('dVAC2').innerHTML=Math.round(S.vac)+'<small>VAC kPa</small>';
+$('tCV').textContent=Math.round(S.cv)+'%';$('vCV').setAttribute('class','vlv '+(S.cv>5?'op':'cl'));
+$('tMSV2').textContent=S.msv?'OPEN':'CLOSED';$('vMSV2').setAttribute('class','vlv '+(S.msv?'op':'cl'));
+$('tIPCV').textContent=Math.round(S.ipcv)+'%';$('vIPCV').setAttribute('class','vlv '+(S.ipcv>5?'op':'cl'));
+$('sHP').textContent=Math.round(S.hpT)+' °C';$('sHPB').textContent='BRG#1 '+Math.round(S.brg)+' °C';$('sVIBH').textContent='VIB-H '+Math.round(S.vib)+' µm';
+$('sIP').textContent=Math.round(S.ipT)+' °C';$('sVIB').textContent='VIB-IP '+Math.round(S.vib2)+' µm';
+$('sLP').textContent=Math.round(S.lpT)+' °C';$('sEXH').textContent='EXH '+Math.round(S.lpT-120)+' °C';
+$('sVAC').textContent=Math.round(S.vac)+' kPa';$('sVAC2').textContent=Math.round(S.vac)+' kPa';
+$('sCONDT').textContent='HOTWELL '+Math.round(S.condT)+' °C • LVL '+Math.round(S.condLvl)+' mm';
+$('sMW').textContent=Math.round(S.stP)+' MW';$('sRPM').textContent=Math.round(S.stRpm)+' rpm';
+$('sTG').textContent='TURN GEAR: '+(S.stRpm>100?'OFF':'ON');
+$('sCEP').textContent=S.cep?'RUN':'STOP';$('sCW').textContent=(S.cw?'RUN ':'STOP ')+Math.round(S.cwT)+' °C';$('sVACP').textContent=S.vacp?'RUN':'STOP';
+$('stState').textContent=S.trip?'TRIP':S.stSync?('LOAD '+Math.round(S.stP)+' MW'):S.stRun?('ROLL '+Math.round(S.stRpm)+' rpm'):'STOP';
+$('oST2').textContent=`HP ${Math.round(S.hpT)}°C CV ${Math.round(S.cv)}% | IP ${Math.round(S.ipT)}°C CV ${Math.round(S.ipcv)}% | ${Math.round(S.stP)} MW ${Math.round(S.stRpm)} rpm`;
+$('oBRG').textContent=`#1 ${Math.round(S.brg)}°C | #2 ${Math.round(S.brg2)}°C (trip 110) | VIB-H ${Math.round(S.vib)} | VIB-IP ${Math.round(S.vib2)} (trip 125)`;
+$('oVAC').textContent=`${Math.round(S.vac)} kPa (maqsad −92) | CW ${S.cw?'RUN':'STOP'} ${Math.round(S.cwT)}°C | HOTWELL ${Math.round(S.condLvl)} mm`;
+$('dSRPM').innerHTML=Math.round(S.stRpm)+'<small>RPM 3000</small>';$('dST').innerHTML=Math.round(S.stP)+'<small>MW 80–120</small>';$('dSVIB').innerHTML=Math.round(S.vib)+'<small>VIB-H µm <125</small>';$('dSVIB2').innerHTML=Math.round(S.vib2)+'<small>VIB-IP µm <125</small>';$('dBRG').innerHTML=Math.round(S.brg)+'<small>BRG#1 °C <110</small>';$('dBRG2').innerHTML=Math.round(S.brg2)+'<small>BRG#2 °C <110</small>';$('dCVAC').innerHTML=Math.round(S.vac)+'<small>VAC kPa →−92</small>';$('dCW').innerHTML=Math.round(S.cwT)+'<small>CW °C</small>';
+$('eMW').textContent=Math.round(tot)+' MW';$('eMVAR').textContent=Math.round(S.mvar)+' MVAR';$('eV').textContent=S.gv.toFixed(2)+' kV';
+$('eAMP').textContent='Stator '+Math.round(tot>0?tot*38:0)+' A';$('eH2').textContent='H2 0.30 MPa / 42 °C';
+$('eAVRM').textContent='AVR: '+(S.avr?'AUTO':'MANUAL');$('eEXCI').textContent='Exc I '+Math.round(S.excI)+' A';$('eEXCV').textContent='Exc V '+Math.round(S.excV)+' V';
+$('eHZ').textContent=S.freq.toFixed(2)+' Hz';$('eCOS').textContent='cosφ '+S.cos.toFixed(2);
+$('eQMODE').textContent=S.brk?(S.mvar>5?'O`TA QO`ZG`ATILGAN':S.mvar<-5?'KAM QO`ZG`ATILGAN':'NORMAL'):'—';
+$('eTRLOAD').textContent=Math.round(tot/3.1)+'%';$('eTRT').textContent='Moy '+Math.round(S.trT)+' °C';$('eTRV').textContent='HV '+S.gridV.toFixed(1)+' kV';
+$('eGRIDV').textContent=S.gridV.toFixed(1)+' kV';
+$('eSYN').textContent='SYNC: '+(S.brk?'ULANGAN':(S.brkh?'TAYYOR':'—'));
+$('oSYN').textContent=`Δf=${Math.abs(S.freq-50).toFixed(2)} Hz (<0.1) | ΔU=${Math.abs(S.gv-15.75).toFixed(2)} kV (<5%) | 52H ${S.brkh?'CLOSED':'OPEN'} | 52G ${S.brk?'CLOSED':'OPEN'}`;
+$('oHOUSE').textContent=S.brkh?`6 kV shina: ZAPITAN (TRＳN dan)`:`6 kV shina: REZERV (tarmoqdan)`;
+$('oAVR').textContent=`${S.avr?'AUTO':'MAN'} | Exc ${Math.round(S.excI)} A / ${Math.round(S.excV)} V | Q=${Math.round(S.mvar)} MVAR | cosφ ${S.cos.toFixed(2)}`;
+$('elState').textContent=S.trip?'TRIP':S.brk?('GENERATSIYA '+Math.round(tot)+' MW'):S.brkh?'110 kV ZAPITAN':'DE-ENERGIZED';
+$('tBRK').textContent=S.brk?'CLOSED':'OPEN';$('vBRK').setAttribute('class','vlv '+(S.brk?'op':'cl'));
+$('tBRKH').textContent=S.brkh?'CLOSED':'OPEN';$('vBRKH').setAttribute('class','vlv '+(S.brkh?'op':'cl'));
+$('dKV').innerHTML=S.gv.toFixed(2)+'<small>GEN kV</small>';$('dHZ').innerHTML=S.freq.toFixed(2)+'<small>GRID Hz</small>';$('dCOS').innerHTML=S.cos.toFixed(2)+'<small>cosφ 0.85–0.90</small>';$('dTOT').innerHTML=Math.round(tot)+'<small>TOTAL MW</small>';
+$('dMVAR').innerHTML=Math.round(S.mvar)+'<small>MVAR</small>';$('dEXCI').innerHTML=Math.round(S.excI)+'<small>EXC I, A</small>';$('dTRT').innerHTML=Math.round(S.trT)+'<small>TR moy °C</small>';$('dGRIDV').innerHTML=S.gridV.toFixed(1)+'<small>GRID kV</small>';
+const eq=(id,run,tr)=>{$(id).setAttribute('class','eq '+(tr?'trip':run?'run':''));};
+eq('eGT',S.gtRun,S.trip);eq('eHRSG',S.hpP>9,0);eq('eST',S.stRun,S.trip);eq('eGEN',tot>0,0);eq('eGEN2',S.brk,S.trip);eq('eAVR',S.avr,0);eq('eTR',S.brkh,0);eq('eGRID',S.brkh,0);eq('eCMP',S.gtRun,0);eq('eCMB',S.fv&&S.gtRun,0);eq('eGTT',S.gtRun,0);eq('eDRUM',S.fwp,0);eq('eFW',S.fwp,0);eq('eCEP',S.cep,0);eq('eFWP',S.fwp,0);eq('eOIL',S.cep||S.fwp,0);eq('eIP',S.ipv||S.ipP>2,0);eq('eLP',S.lpP>0.4,0);eq('eDEA',S.cep,0);eq('eCEP2',S.cep,0);eq('eHP',S.stRun,S.trip);eq('eCOND',S.vac<-60,0);eq('eCEP3',S.cep,0);eq('eCW',S.cw,0);
+const pl=(id,on)=>{const e=$(id);if(e)e.style.opacity=on?1:.3;};
+pl('pg-gas',S.fv);pl('pg-exh',S.gtRun);pl('pg-hp',S.msv);pl('pg-fw',S.cep);pl('pg-oil',S.cep||S.fwp);
+pl('gP1',S.fv);pl('gP2',S.fv&&S.gtRun);pl('gP3',S.gtRun);pl('gPO',S.cep||S.fwp);pl('gPW',S.cep);
+pl('hGAS',S.gtRun);pl('hP1',S.fwp);pl('hP2',S.msv);pl('hFW',S.fwp||S.cep);pl('sP0',S.msv);pl('sPIP',S.ipv);pl('sPW',S.cep||S.cw);pl('sPO',S.cep||S.fwp);pl('eBUS',S.brkh);pl('eEXCLINE',S.brk);
+drawSteps();}
+const cv=$('tr'),ctx=cv.getContext('2d');
+function drawTr(){if(!hist.length)return;cv.width=cv.clientWidth*2;cv.height=520;ctx.fillStyle='#0a0f0a';ctx.fillRect(0,0,cv.width,cv.height);ctx.strokeStyle='#1d2b1d';for(let i=0;i<10;i++){ctx.beginPath();ctx.moveTo(0,i*cv.height/9);ctx.lineTo(cv.width,i*cv.height/9);ctx.stroke();}
+const L=(f,c,s)=>{ctx.strokeStyle=c;ctx.lineWidth=3;ctx.beginPath();hist.forEach((h,i)=>{const x=i/239*cv.width;const y=cv.height-Math.min(cv.height-10,f(h)*s);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();};
+L(h=>h.exh,'#ff5b5b',.8);L(h=>h.oil*100,'#3dff7a',2.5);L(h=>h.tot,'#4aa8ff',1.5);L(h=>h.drum+100,'#ffcf7a',1.5);
+L(h=>h.hp*28,'#ff9f43',1);L(h=>h.ip*70,'#c084fc',1);L(h=>h.lp*200,'#5eead4',1);
+const l=hist[hist.length-1];$('trV').textContent=`EXH:${Math.round(l.exh)} MOY:${l.oil.toFixed(2)} TOT:${Math.round(l.tot)}MW DRUM:${Math.round(l.drum)} HP:${l.hp.toFixed(1)} IP:${l.ip.toFixed(2)} LP:${l.lp.toFixed(2)}`;}
+setInterval(()=>{if(!S.trip){
+if(S.gtRun){S.rpm+=(3000-S.rpm)*.06+(Math.random()*4-2);}else S.rpm=Math.max(0,S.rpm-120);
+S.fuel+=(((S.fv&&S.gtRun)?2.9:0)-S.fuel)*.08;
+const exhT=S.gtRun?(S.gtP>10?560+S.gtP*.25:480):20;S.exh+=(exhT-S.exh)*.05+Math.random()*1.5;
+S.igv+=(((S.gtP>0)?70+S.gtP*.1:S.gtRun?30:0)-S.igv)*.05;
+const hpT=S.gtRun?10.5+S.gtP*.006:8;S.hpP+=(hpT-S.hpP)*.03;
+S.hpT+=((S.gtRun?400+S.exh*.22:20)-S.hpT)*.04;
+S.gasIn+=((S.gtRun?S.exh:20)-S.gasIn)*.06;
+S.stack+=((S.gtRun?95+S.gtP*.08:20)-S.stack)*.04;
+const ipPT=S.gtRun?2.6+S.gtP*.001:0.4;S.ipP+=(ipPT-S.ipP)*.03;
+S.ipT+=((S.gtRun?230+S.exh*.12:20)-S.ipT)*.04;
+const lpPT=S.gtRun?0.55+S.gtP*.0004:0.1;S.lpP+=(lpPT-S.lpP)*.03;
+S.lpT+=((S.gtRun?140+S.exh*.05:20)-S.lpT)*.04;
+if(S.fwp){S.drum+=(0-S.drum)*.05+(Math.random()*4-2);S.ipLvl+=(0-S.ipLvl)*.05+(Math.random()*4-2);S.lpLvl+=(0-S.lpLvl)*.05+(Math.random()*4-2);}else{S.drum+=(S.gtRun?-1:0);}
+S.fwcv+=(((S.fwp)?50-S.drum:50)-S.fwcv)*.05;S.fwcv=Math.max(0,Math.min(100,S.fwcv));
+S.deaP+=(((S.cep)?0.6:0.02)-S.deaP)*.04;S.deaT+=(((S.cep)?158:20)-S.deaT)*.04;
+S.cdp+=(((S.gtRun)?2.1:0.1)-S.cdp)*.05;
+S.vac+=(((S.cw&&S.vacp)?-92:(S.cep?-60:-30))-S.vac)*.04;
+S.cwT+=(((S.cw)?30:28)-S.cwT)*.02;
+S.condT+=(((S.stP>0)?45:25)-S.condT)*.03;S.condLvl+=(((S.cep)?400:550)-S.condLvl)*.03;
+if(S.stRun&&S.msv&&S.cv>5){S.stRpm+=(3000-S.stRpm)*(.02+S.cv*.001);}else if(S.stRpm>0&&(!S.msv))S.stRpm=Math.max(0,S.stRpm-100);
+if(S.stSync)S.stRpm=3000+Math.random()*5-2.5;
+S.oil+=(((S.cep||S.fwp)?.45:0)-S.oil)*.05;
+S.brg+=((S.stP>0?85:70)-S.brg)*.02;S.brg2+=((S.stP>0?82:68)-S.brg2)*.02;
+if(S.brg>110){trip('BRG#1 >110 °C — himoya');}
+if(S.brg2>110){trip('BRG#2 >110 °C — himoya');}
+S.freq=50+Math.random()*.03-.015-(S.flt==='freq'?0.6:0);
+S.gv+=(((S.avr&&S.brk)?15.75:15.70)-S.gv)*.05+(Math.random()*.02-.01);
+S.mvar+=((S.brk?(S.avr?25:0):0)-S.mvar)*.03;
+S.excI+=((S.brk?1800+(S.gtP+S.stP)*4+S.mvar*8:0)-S.excI)*.05;
+S.excV+=((S.brk?320+S.mvar*1.2:0)-S.excV)*.05;
+S.cos=(S.gtP+S.stP)>5?Math.max(.75,Math.min(.99,(S.gtP+S.stP)/Math.sqrt((S.gtP+S.stP)*(S.gtP+S.stP)+S.mvar*S.mvar))):.87;
+S.trT+=((S.brk?45+(S.gtP+S.stP)*.06:25)-S.trT)*.02;
+S.gridV=110+Math.random()*.4-.2;
+if(S.flt==='fuel'){S.fuel=Math.max(.5,S.fuel-.15);if(S.fuel<2.0){trip('Fuel bosimi <2.0 MPa — himoya');}}
+if(S.flt==='drum'){S.drum+=12;S.ipLvl+=9;S.lpLvl+=7;if(Math.abs(S.drum)>80){trip('HP Drum sathi trip — himoya');}}
+if(S.flt==='freq'){if(S.freq<49.5){alm('GRID FREQ <49.5 Hz — yuk tushiring!',1,'GRID');}}
+if(S.flt==='vib'){S.vib=Math.min(180,S.vib+3);S.vib2=Math.min(180,S.vib2+2.4);if(S.vib>125){trip('VIB-H >125 — himoya');}if(S.vib2>125){trip('VIB-IP >125 — himoya');}}
+if(S.flt==='oil'){S.oil=Math.max(.05,S.oil-.03);if(S.oil<.2){trip('Moy bosimi <0.20 MPa — himoya');}}
+if(S.flt==='over'){S.rpm=Math.min(3600,S.rpm+90);S.stRpm=Math.min(3600,S.stRpm+90);if(S.rpm>3300){trip('Overspeed >3300 rpm — himoya');}}
+if(!S.flt){S.vib=Math.max(38,S.vib-.7);S.vib2=Math.max(36,S.vib2-.6);}
+if(S.gtSync&&!S.flt)S.gtP+=(Math.min(210,150+S.igv)-S.gtP)*.02;
+hist.push({exh:S.exh,oil:S.oil,tot:S.gtP+S.stP,drum:S.drum,hp:S.hpP,ip:S.ipP,lp:S.lpP});if(hist.length>240)hist.shift();
+}upd();if($('p5').classList.contains('on')&&!freeze)drawTr();},600);
+upd();drawSteps();$('score').textContent='OK:0 XATO:0';log("U1 CCGT trener v2.0 tayyor. Tartib: CEP→FWP→FV→GT START→SYNC→YUK→MSV→ST ROLL→SYNC→YUK.");
+</script>
+</body>
+</html>
