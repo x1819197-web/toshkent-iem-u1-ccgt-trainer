@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control - Selected Unit (GE Mark V uslubi, o'quv treneri)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Tahoma,Arial,sans-serif}
+body{background:#D4D0C8;color:#000;font-size:12px;padding:6px}
+/* classic bevels */
+.out{border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #404040;border-bottom:2px solid #404040}
+.in{border-top:2px solid #404040;border-left:2px solid #404040;border-right:2px solid #fff;border-bottom:2px solid #fff}
+/* header */
+.hdr{background:#D4D0C8;border:3px solid #E8C33D;outline:2px solid #808080;display:flex;align-items:center;padding:4px 10px;margin-bottom:6px}
+.hdr .dt{font-weight:700;font-size:14px;width:220px}
+.hdr .ttl{flex:1;text-align:center;font-weight:800;font-size:16px}
+.logo{background:#0E2A47;color:#FFE135;font-weight:900;font-size:16px;padding:4px 14px;letter-spacing:1px;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #404040;border-bottom:2px solid #404040}
+/* mimic */
+.mim{background:#D4D0C8;padding:4px;margin-bottom:6px}
+svg{width:100%;height:auto;background:#D4D0C8;display:block}
+.lbl{font-size:11px;fill:#000;font-weight:700}
+.val{font-size:12px;fill:#000;font-weight:800;font-family:"Courier New",monospace}
+.pipeG{stroke:#E8D400;stroke-width:8;fill:none}
+.pipeB{stroke:#2A6FDB;stroke-width:7;fill:none}
+.pipeP{stroke:#8B2BBE;stroke-width:8;fill:none}
+.pipeE{stroke:#2A6FDB;stroke-width:6;fill:none}
+.shaft{stroke:#404040;stroke-width:5}
+.eq{fill:#D4D0C8;stroke:#000;stroke-width:2}
+.eqT{font-size:11px;font-weight:800;fill:#000}
+.lampG{fill:#00C000;stroke:#000}.lampR{fill:#E02020;stroke:#000}.lampW{fill:#fff;stroke:#000}
+/* bottom grid */
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px}
+@media(max-width:1000px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+fieldset.gr{background:#D4D0C8;border:2px groove #fff;padding:6px;min-height:118px}
+fieldset.gr legend{font-weight:800;font-size:12px;padding:0 4px}
+.btn{display:block;width:100%;margin:3px 0;padding:7px 4px;font-weight:800;font-size:12px;cursor:pointer;background:#D4D0C8;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #404040;border-bottom:2px solid #404040}
+.btn:active,.btn.sel{border-top:2px solid #404040;border-left:2px solid #404040;border-right:2px solid #fff;border-bottom:2px solid #fff}
+.btn.g{background:#30D030}.btn.g.sel{background:#1FA01F;color:#fff}
+.btn.r{background:#F04040}.btn.r.sel{background:#B02020;color:#fff}
+.btnrow{display:flex;gap:4px}.btnrow .btn{flex:1}
+.st{display:flex;align-items:center;gap:6px;padding:2px 0;font-weight:700;font-size:11px}
+.dot{width:12px;height:12px;border:1px solid #000;background:#909090;flex:none}
+.dot.on{background:#00C000}.dot.warn{background:#E8C33D}.dot.al{background:#E02020;animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.4}}
+.albox{background:#fff;height:96px;overflow-y:auto;font-family:"Courier New",monospace;font-size:11px;padding:4px}
+.mwsp{width:100%;padding:6px;font-weight:800;font-size:13px;text-align:center;background:#fff;border-top:2px solid #404040;border-left:2px solid #404040;border-right:2px solid #fff;border-bottom:2px solid #fff}
+/* training strip */
+.tstrip{margin-top:6px;background:#7a1010;color:#ffe2a8;font-weight:800;font-size:11px;padding:5px 10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tstrip .btn{width:auto;margin:0;padding:4px 10px;font-size:11px}
+</style>
+</head>
+<body>
+<div class="hdr out">
+<div class="dt" id="dt">11.07.2007 16:11:37</div>
+<div class="ttl">Control - Selected Unit</div>
+<div class="logo">ITS GTA</div>
+</div>
+
+<div class="mim in">
+<svg viewBox="0 0 1000 360">
+<!-- fuel gas yellow line -->
+<line x1="20" y1="270" x2="150" y2="270" class="pipeG"/>
+<rect x="150" y="255" width="30" height="30" id="vSRV" class="lampR"/>
+<text x="165" y="248" text-anchor="middle" class="lbl">SRV</text>
+<line x1="180" y1="270" x2="240" y2="270" class="pipeG"/>
+<rect x="240" y="255" width="30" height="30" id="vGCV" class="lampR"/>
+<text x="255" y="248" text-anchor="middle" class="lbl">GCV</text>
+<line x1="270" y1="270" x2="270" y2="180" class="pipeG"/>
+<line x1="270" y1="180" x2="400" y2="180" class="pipeG"/>
+<text x="60" y="240" class="lbl">FSR1 <tspan class="val" id="mFSR1">0.0 %</tspan></text>
+<text x="60" y="256" class="lbl">FSR2 <tspan class="val" id="mFSR2">0.0 %</tspan></text>
+<text x="150" y="305" class="lbl">PRESSURE 2 <tspan class="val" id="mP2">0.00 bar</tspan></text>
+<!-- shaft train left -->
+<rect x="20" y="140" width="92" height="56" class="eq"/><text x="66" y="163" text-anchor="middle" class="eqT">DIESEL</text><text x="66" y="178" text-anchor="middle" class="eqT">ENGINE</text>
+<rect x="118" y="150" width="52" height="36" class="eq"/><text x="144" y="166" text-anchor="middle" class="eqT" font-size="9">RATCHET</text><text x="144" y="178" text-anchor="middle" class="eqT" font-size="9" id="mRAT">STOP</text>
+<rect x="176" y="140" width="72" height="56" class="eq"/><text x="212" y="163" text-anchor="middle" class="eqT">ACC.</text><text x="212" y="178" text-anchor="middle" class="eqT">GEAR</text>
+<line x1="20" y1="168" x2="1000" y2="168" class="shaft" opacity="0"/>
+<line x1="112" y1="168" x2="118" y2="168" class="shaft"/><line x1="170" y1="168" x2="176" y2="168" class="shaft"/>
+<!-- compressor -->
+<polygon points="248,138 380,128 380,208 248,198" class="eq"/>
+<text x="314" y="170" text-anchor="middle" class="eqT">COMPRESSOR</text>
+<line x1="248" y1="168" x2="380" y2="168" class="shaft"/>
+<text x="255" y="120" class="lbl">IGV <tspan class="val" id="mIGV">57.0 DGA</tspan></text>
+<text x="255" y="228" class="lbl">CPD <tspan class="val" id="mCPD">0.00 bar</tspan></text>
+<text x="255" y="244" class="lbl">CTD <tspan class="val" id="mCTD">15 deg C</tspan></text>
+<!-- combustor -->
+<rect x="400" y="138" width="92" height="60" class="eq"/><text x="446" y="163" text-anchor="middle" class="eqT">COMB-</text><text x="446" y="178" text-anchor="middle" class="eqT">USTOR</text>
+<text x="446" y="128" text-anchor="middle" class="lbl" id="mFLAME">FLAME: NO</text>
+<!-- steam injection blue -->
+<line x1="446" y1="330" x2="446" y2="198" class="pipeB"/>
+<text x="455" y="300" class="lbl">STEAM INJ <tspan class="val" id="mSTM">0.00 kg/s</tspan></text>
+<!-- turbine -->
+<polygon points="492,138 604,128 604,208 492,198" class="eq"/>
+<text x="548" y="170" text-anchor="middle" class="eqT">TURBINE</text>
+<line x1="492" y1="168" x2="604" y2="168" class="shaft"/>
+<text x="500" y="228" class="lbl">SPEED <tspan class="val" id="mRPM">0 rpm</tspan></text>
+<!-- exhaust purple -->
+<line x1="548" y1="128" x2="548" y2="60" class="pipeP"/>
+<line x1="548" y1="60" x2="980" y2="60" class="pipeP"/>
+<text x="620" y="50" class="lbl">TTXSP1 <tspan class="val" id="mTTX">15.0 deg C</tspan></text>
+<text x="800" y="50" class="lbl">EXHAUST <tspan class="val" id="mEXH">15 deg C</tspan></text>
+<!-- load gear + generator + exciter -->
+<rect x="620" y="140" width="72" height="56" class="eq"/><text x="656" y="163" text-anchor="middle" class="eqT">LOAD</text><text x="656" y="178" text-anchor="middle" class="eqT">GEAR</text>
+<circle cx="748" cy="168" r="40" class="eq"/><text x="748" y="164" text-anchor="middle" class="eqT">GEN</text><text x="748" y="180" text-anchor="middle" class="eqT" id="mGENP">0.0 %</text>
+<rect x="800" y="148" width="64" height="40" class="eq"/><text x="832" y="164" text-anchor="middle" class="eqT">EXCITER</text><text x="832" y="179" text-anchor="middle" class="eqT" font-size="9" id="mEXC">OFF</text>
+<line x1="604" y1="168" x2="620" y2="168" class="shaft"/><line x1="692" y1="168" x2="708" y2="168" class="shaft"/>
+<!-- electrical blue -->
+<line x1="748" y1="208" x2="748" y2="250" class="pipeE"/>
+<line x1="748" y1="250" x2="980" y2="250" class="pipeE"/>
+<rect x="880" y="235" width="28" height="28" id="vBRK" class="lampR"/>
+<text x="894" y="228" text-anchor="middle" class="lbl">BREAKER <tspan class="val" id="mBRK">OPEN</tspan></text>
+<text x="600" y="240" class="lbl">GEN kV <tspan class="val" id="mKV">33.75 kV</tspan></text>
+<text x="600" y="256" class="lbl">WATTS <tspan class="val" id="mMW">0.0 MW</tspan></text>
+<text x="600" y="272" class="lbl">VARS <tspan class="val" id="mMVAR">0.0 MVAR</tspan></text>
+<text x="600" y="288" class="lbl">POWER F. <tspan class="val" id="mPF">0.911 PF</tspan></text>
+<text x="600" y="310" class="lbl">FREQ <tspan class="val" id="mHZ">50.00 Hz</tspan></text>
+<text x="20" y="330" class="lbl">FUEL: GAS <tspan class="val" id="mFUEL">AUTO</tspan></text>
+<text x="200" y="330" class="lbl">CYCLE: COMBINED CYCLE</text>
+</svg>
+</div>
+
+<div class="grid">
+<fieldset class="gr"><legend>TURBINE STATE</legend>
+<div class="st"><span class="dot" id="dRUN"></span>RUN STATUS</div>
+<div class="st"><span class="dot" id="dLOAD"></span><span id="tLOAD">MANUAL LOAD</span></div>
+<div class="st"><span class="dot" id="dGOV"></span><span id="tGOV">SPEED - DROOP</span></div>
+<div class="st"><span class="dot" id="dFLM"></span>FLAME</div>
+<div class="st"><span class="dot on" id="dGAS"></span>GAS AUTO</div>
+<div class="st"><span class="dot on"></span>CYCLE: COMBINED CYCLE</div>
+<div class="st"><span class="dot" id="dIGV"></span>IGV FULL OPEN</div>
+</fieldset>
+<fieldset class="gr"><legend>MASTER SELECT</legend>
+<div class="btnrow"><button class="btn" id="bOFF" onclick="sel('OFF')">OFF</button><button class="btn" id="bCRANK" onclick="sel('CRANK')">CRANK</button></div>
+<div class="btnrow"><button class="btn" id="bFIRE" onclick="sel('FIRE')">FIRE</button><button class="btn g sel" id="bAUTO" onclick="sel('AUTO')">AUTO</button></div>
+</fieldset>
+<fieldset class="gr"><legend>MASTER CONTROL</legend>
+<button class="btn g" onclick="start()">START</button>
+<button class="btn r" onclick="stop()">STOP</button>
+</fieldset>
+<fieldset class="gr"><legend>GOVERNOR MODE</legend>
+<button class="btn g sel" id="bDR" onclick="gov('DROOP')">DROOP</button>
+<button class="btn" id="bIS" onclick="gov('ISOCH')">ISOCH</button>
+</fieldset>
+<fieldset class="gr"><legend>CONTROL LOCATION</legend>
+<button class="btn" id="bLOC" onclick="loc('LOCAL')">LOCAL</button>
+<button class="btn" id="bCAB" onclick="loc('CABLE')">CABLE REMOTE</button>
+<button class="btn g sel" id="bREM" onclick="loc('REMOTE')">REMOTE</button>
+</fieldset>
+<fieldset class="gr"><legend>SPEED / LOAD CONTROL</legend>
+<button class="btn r" onmousedown="hd(1)" onmouseup="hc()" onmouseleave="hc()">RAISE ▲</button>
+<button class="btn r" onmousedown="hd(-1)" onmouseup="hc()" onmouseleave="hc()">LOWER ▼</button>
+<div class="st">SETPOINT <span class="val" id="mSP" style="font-family:'Courier New',monospace;font-weight:800">2.0 MW</span></div>
+</fieldset>
+<fieldset class="gr"><legend>MASTER RESET</legend>
+<button class="btn g" onclick="reset()">MASTER RESET</button>
+<div class="st"><span class="dot" id="dTRIP"></span><span id="tTRIP">NO TRIP</span></div>
+</fieldset>
+<fieldset class="gr"><legend>LOAD SELECT</legend>
+<div class="btnrow"><button class="btn" id="bBASE" onclick="lset('BASE')">BASE LOAD</button><button class="btn" id="bPEAK" onclick="lset('PEAK')">PEAK LOAD</button></div>
+<button class="btn" id="bPRE" onclick="lset('PRE')">PRESEL LOAD</button>
+<input class="mwsp" id="mwsp" type="number" step="0.5" value="2.0" onchange="setsp()">
+<div class="st">MW SETPOINT (PRESEL)</div>
+</fieldset>
+<fieldset class="gr"><legend>VOLTAGE CONTROL</legend>
+<button class="btn r" onmousedown="vd(1)" onmouseup="hc()" onmouseleave="hc()">RAISE ▲</button>
+<button class="btn r" onmousedown="vd(-1)" onmouseup="hc()" onmouseleave="hc()">LOWER ▼</button>
+</fieldset>
+<fieldset class="gr"><legend>STEAM INJECTION</legend>
+<button class="btn r sel" id="bSOFF" onclick="stm(0)">OFF</button>
+<button class="btn g" id="bSON" onclick="stm(1)">ON</button>
+</fieldset>
+<fieldset class="gr" style="grid-column:span 2"><legend>ALARM <button class="btn" style="display:inline;width:auto;padding:2px 12px" onclick="ack()">ACK</button></legend>
+<div class="albox in" id="albox"><div>NO ALARM</div></div>
+</fieldset>
+</div>
+
+<div class="tstrip out">
+<span>TRAINING SIMULATOR — NOT FOR CONTROL</span>
+<span style="flex:1"></span>
+<span>INSTRUCTOR:</span>
+<button class="btn r" onclick="fault('flame')">LOSS OF FLAME</button>
+<button class="btn r" onclick="fault('exh')">EXH OVERTEMP</button>
+<button class="btn r" onclick="fault('fuel')">LOW FUEL PRESS</button>
+<button class="btn" onclick="fault(null)">CLEAR</button>
+<span>OK:<b id="sG">0</b> XATO:<b id="sB">0</b></span>
+</div>
+
+<script>
+let S={mode:'AUTO',gov:'DROOP',loc:'REMOTE',run:0,rpm:0,mw:0,sp:2.0,lsel:'PRE',fsr1:0,fsr2:0,p2:0,igv:57,cpd:0,ctd:15,flame:0,stm:0,sflow:0,ttx:15,exh:15,kv:33.75,vars:0,pf:.911,hz:50,brk:0,trip:0,flt:null,unloading:0};
+let G=0,B=0,holdT=null;
+const $=id=>document.getElementById(id);
+const now=()=>new Date().toLocaleTimeString('uz-UZ',{hour12:false});
+setInterval(()=>{const d=new Date();const p=n=>String(n).padStart(2,'0');$('dt').textContent=`${p(d.getDate())}.${p(d.getMonth()+1)}.${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;},1000);
+function alm(t){const b=$('albox');if(b.textContent.includes('NO ALARM'))b.innerHTML='';const d=document.createElement('div');d.textContent=now()+'  '+t;b.prepend(d);}
+function ack(){$('albox').innerHTML='<div>ACK '+now()+' — operator tasdiqladi</div>';}
+function good(m){G++;$('sG').textContent=G;}
+function bad(m){B++;$('sB').textContent=B;alm('OPER XATO: '+m);}
+function mark(id,on){$(id).className='btn'+(on?' sel':'');}
+function sel(m){S.mode=m;['OFF','CRANK','FIRE','AUTO'].forEach(x=>$('b'+x).classList.remove('sel'));$('b'+m).classList.add('sel');log('MASTER SELECT → '+m);}
+function log(m){alm(m);}
+function gov(g){S.gov=g;$('bDR').classList.toggle('sel',g==='DROOP');$('bDR').classList.toggle('g',g==='DROOP');$('bIS').classList.toggle('sel',g==='ISOCH');$('bIS').classList.toggle('g',g==='ISOCH');$('tGOV').textContent='SPEED - '+g;alm('GOVERNOR → '+g);}
+function loc(l){S.loc=l;['LOC','CAB','REM'].forEach(x=>$('b'+x).classList.remove('sel'));$('b'+({LOCAL:'LOC',CABLE:'CAB',REMOTE:'REM'}[l])).classList.add('sel');alm('CONTROL LOCATION → '+l);}
+function start(){
+if(S.trip){alm('START rad: avval MASTER RESET');return;}
+if(S.mode==='OFF'){bad('START rad: MASTER SELECT OFF');return;}
+if(S.run>0){alm('START: allaqachon ishlamoqda');return;}
+S.run=1;S.unloading=0;good('START '+S.mode);alm('START — '+S.mode+' ketma-ketlik boshlandi');
+}
+function stop(){
+if(S.run===0){alm('STOP: turbina toxtagan');return;}
+if(S.mw>1){S.unloading=1;alm('STOP — UNLOADING (yuk tushirilmoqda)');}
+else doStop();
+}
+function doStop(){S.run=0;S.flame=0;S.brk=0;S.mw=0;S.unloading=0;alm('STOP — breaker open, flame off, coast down');}
+function reset(){S.trip=0;S.flt=null;$('tTRIP').textContent='NO TRIP';$('dTRIP').className='dot';$('albox').innerHTML='<div>RESET '+now()+'</div>';good('MASTER RESET');}
+function lset(l){S.lsel=l;['BASE','PEAK','PRE'].forEach(x=>$('b'+x).classList.remove('sel'));$('b'+l).classList.add('sel');if(l==='BASE'){S.sp=28.6;alm('BASE LOAD → SP 28.6 MW');}if(l==='PEAK'){S.sp=32.0;alm('PEAK LOAD → SP 32.0 MW');}if(l==='PRE'){S.sp=parseFloat($('mwsp').value)||2.0;alm('PRESEL LOAD → SP '+S.sp+' MW');}upd();}
+function setsp(){S.sp=Math.max(0,Math.min(35,parseFloat($('mwsp').value)||0));if(S.lsel!=='PRE'){S.lsel='PRE';lset('PRE');}upd();}
+function hd(d){hc();holdT=setInterval(()=>{ if(S.run<4){bad('Avval sincronizatsiya kerak');hc();return;} S.sp=Math.max(0,Math.min(35,S.sp+d*0.5)); if(S.lsel!=='PRE'){S.lsel='PRE';} $('mwsp').value=S.sp.toFixed(1); upd(); },250);}
+function vd(d){hc();holdT=setInterval(()=>{ if(!S.brk){bad('EXC: avval breaker yopilsin');hc();return;} S.vars=Math.max(-10,Math.min(25,S.vars+d*0.5)); upd(); },250);}
+function hc(){if(holdT){clearInterval(holdT);holdT=null;}}
+function stm(o){S.stm=o;$('bSOFF').classList.toggle('sel',!o);$('bSOFF').classList.toggle('r',!o);$('bSON').classList.toggle('sel',!!o);$('bSON').classList.toggle('g',true);alm('STEAM INJECTION '+(o?'ON':'OFF'));}
+function fault(f){S.flt=f;if(!f){alm('INSTR: fault tozalandi');return;}alm('INSTR SSENARIY: '+{flame:'LOSS OF FLAME',exh:'EXH OVERTEMP',fuel:'LOW FUEL PRESS'}[f]);}
+function trip(r){if(S.trip)return;S.trip=1;S.run=0;S.flame=0;S.brk=0;const m=S.mw;S.mw=0;$('tTRIP').textContent='TRIP: '+r;$('dTRIP').className='dot al';alm('*** TRIP — '+r+' ***');B++;$('sB').textContent=B;}
+function cls(el,open){$(el).setAttribute('class',open?'lampG':'lampR');}
+function upd(){
+$('mFSR1').textContent=S.fsr1.toFixed(1)+' %';$('mFSR2').textContent=S.fsr2.toFixed(1)+' %';
+$('mP2').textContent=S.p2.toFixed(2)+' bar';
+$('mIGV').textContent=S.igv.toFixed(1)+' DGA';$('mCPD').textContent=S.cpd.toFixed(2)+' bar';$('mCTD').textContent=Math.round(S.ctd)+' deg C';
+$('mFLAME').textContent='FLAME: '+(S.flame?'YES':'NO');
+$('mSTM').textContent=S.sflow.toFixed(2)+' kg/s';
+$('mTTX').textContent=S.ttx.toFixed(1)+' deg C';$('mEXH').textContent=Math.round(S.exh)+' deg C';
+$('mGENP').textContent=(S.mw/28*100).toFixed(2)+' %';
+$('mKV').textContent=S.kv.toFixed(2)+' kV';$('mMW').textContent=S.mw.toFixed(1)+' MW';$('mMVAR').textContent=S.vars.toFixed(1)+' MVAR';
+$('mPF').textContent=S.mw>0.5?(S.mw/Math.sqrt(S.mw*S.mw+S.vars*S.vars)).toFixed(3)+' PF':S.pf.toFixed(3)+' PF';
+$('mHZ').textContent=S.hz.toFixed(2)+' Hz';
+$('mBRK').textContent=S.brk?'CLOSED':'OPEN';cls('vBRK',S.brk);
+$('mSP').textContent=S.sp.toFixed(1)+' MW';
+$('mRPM').textContent=Math.round(S.rpm)+' rpm';
+$('mRAT').textContent=S.run===1?'CRANK':'STOP';
+cls('vSRV',S.flame||S.run===1);cls('vGCV',S.fsr1>2);
+$('dRUN').className='dot '+(S.run>0?'on':'');
+$('dLOAD').className='dot '+(S.mw>0.5?'on':'');
+$('tLOAD').textContent=S.unloading?'UNLOADING':'MANUAL LOAD';
+$('dGOV').className='dot on';
+$('dFLM').className='dot '+(S.flame?'on':'');
+$('dIGV').className='dot '+(S.igv>80?'on':'');
+$('mEXC').textContent=S.brk?'ON':'OFF';
+}
+setInterval(()=>{
+if(!S.trip){
+// sequence
+if(S.run===1){S.rpm+=(500-S.rpm)*.08;S.flame=0;if(S.rpm>480){if(S.mode==='CRANK'){/* hold crank */}else{S.run=2;alm('FIRED — alangalanish');S.flame=1;}}}
+else if(S.run===2){S.rpm+=(3000-S.rpm)*.05;S.flame=1;if(S.rpm>2950){S.run=3;S.rpm=3000;alm('FSNL — 3000 rpm, sinxronizatsiyaga tayyor');}}
+else if(S.run===3){S.rpm=3000+Math.random()*4-2;S.flame=1;if(S.mode==='AUTO'){S.brk=1;S.run=4;S.mw=0.5;S.vars=8.0;alm('BREAKER CLOSED — tarmoqqa ulandi');good('SYNC');}}
+else if(S.run===4){S.rpm=3000+Math.random()*4-2;S.flame=1;
+  if(S.unloading){S.mw=Math.max(0,S.mw-1.2);if(S.mw<=0){S.brk=0;doStop();}}
+  else{S.mw+=(Math.min(S.sp,35)-S.mw)*.06;}
+}
+if(S.run===0&&S.rpm>0)S.rpm=Math.max(0,S.rpm-60);
+// physics from load
+const L=S.mw, F=S.flame?1:0;
+S.fsr1+=((F?(18+L*0.62):0)-S.fsr1)*.06;
+S.fsr2+=((F?(16+L*0.60):0)-S.fsr2)*.06;
+let p2t=F?(S.flt==='fuel'?Math.max(4,S.p2-0.4):7.7+L*0.33):0;S.p2+=(p2t-S.p2)*.06;
+S.igv+=(((S.rpm>2900)?86:57)-S.igv)*.05;
+S.cpd+=((S.rpm>2900?6.5+L*0.107:0)-S.cpd)*.05;
+S.ctd+=(((F)?180+L*6:15)-S.ctd)*.05;
+S.sflow+=(((S.stm&&F)?2.5:0)-S.sflow)*.08;
+let et=(F?(320+L*3.1):15)-(S.stm?12:0)+(S.flt==='exh'?60:0);S.exh+=(et-S.exh)*.05+Math.random();
+S.ttx+=(((F)?165+L*0.3:15)-S.ttx)*.05;
+// VARS faqat operator (VOLTAGE RAISE/LOWER) orqali o'zgaradi
+if(!S.brk)S.vars+=(0-S.vars)*.1;
+S.kv=33.75+Math.random()*.04-.02;
+S.hz=50+Math.random()*.03-.015;
+// protections
+if(S.flt==='flame'&&S.flame){trip('LOSS OF FLAME');}
+if(S.exh>450){trip('EXH OVERTEMP >450 C');}
+if(F&&L>2&&S.p2<12&&S.flt==='fuel'){trip('LOW FUEL PRESSURE');}
+}
+upd();
+},500);
+upd();
+alm('Trener tayyor (Mark V uslubi). MASTER SELECT=AUTO, START bosing.');
+</script>
+</body>
+</html>
